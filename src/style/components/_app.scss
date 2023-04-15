@@ -1,0 +1,43 @@
+@use "../tools/screen";
+.app{
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  grid-template-rows: 10px 200px auto 200px 10px;
+
+  grid-template-areas: 
+    "header"
+    "info"
+    "form"
+    "list"
+    "footer";
+
+  @include screen.larger-than(md){
+    grid-template-rows: 10px 200px auto 10px;
+    grid-template-areas: 
+      "header header"
+      "form info"
+      "form list"
+      "footer footer";
+  }
+  &__header{
+    grid-area: header;
+    // background-color: blue;
+  }
+  &__form{
+    grid-area: form;
+    // background-color: red;
+  }
+  &__info{
+    grid-area: info;
+    // background-color: green;
+  }
+  &__powerlist{
+    grid-area: list;
+    // background-color: gray;
+  }
+  &__footer{
+    grid-area: footer;
+    // background-color: purple;
+  }
+}

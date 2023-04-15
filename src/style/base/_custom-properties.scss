@@ -1,0 +1,16 @@
+@use '../abstracts/' as *;
+
+:root {
+  @each $name, $values in $active-theme {
+    @each $shade, $value in $values {
+      --#{$name}-#{$shade}: #{$value};
+    }
+  }
+
+  @each $font-size, $size in $font-sizes {
+    --fsr-#{$font-size}: #{$size}rem;
+  }
+  @each $font-size, $size in $font-sizes {
+    --fs-#{$font-size}: #{$size}em;
+  }
+}

@@ -1,0 +1,11 @@
+.powerquality{
+  display: table-cell;
+  &__name{
+    margin: 0;
+    width: auto;
+    // float: left;
+  }
+  &__cost{
+    // float:left;
+  }
+}
