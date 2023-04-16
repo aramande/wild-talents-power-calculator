@@ -41,8 +41,13 @@ h4 {
   font-size: $font-size-500;
 }
 
+p {
+  margin-block: 10px;
+}
+
 input{
-  background: transparent;
+  background: $color-page-background;
+  color: $color-text-body;
   border: none;
   outline: none;
   border-bottom: $color-border-input 1px solid;

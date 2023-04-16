@@ -3,8 +3,10 @@
 $active-theme: $dark-theme;
 
 // color tokens
+$accent-200: var(--accent-200);
 $accent-400: var(--accent-400);
 $accent-500: var(--accent-500);
+$accent-700: var(--accent-700);
 
 $primary-400: var(--primary-400);
 $primary-800: var(--primary-800);
@@ -38,6 +40,7 @@ $font-size-rel-500: var(--fs-500);
 $font-size-rel-600: var(--fs-600);
 
 $color-surface-default: $neutral-100;
+$color-surface-secondary: $neutral-200;
 $color-surface-inverse: $primary-900;
 $color-surface-accent: $accent-400;
 
@@ -77,7 +80,10 @@ $color-page-background: $color-surface-default;
 
 $color-text-body: $neutral-900;
 $color-text-heading: $primary-800;
-$color-text-accent: $accent-400;
+$color-text-accent-dark: $accent-200;
+$color-text-accent-negative: $accent-400;
+$color-text-accent-positive: $accent-500;
+$color-text-accent-light: $accent-700;
 $color-text-inverse: $neutral-100;
 $color-border-input: $neutral-500;
 

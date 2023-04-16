@@ -1,0 +1,19 @@
+@use '../abstracts/' as *;
+
+.infobox{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  padding: space(4);
+  &__scrollbox{
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  &__specific{
+    margin-top: -10px;
+    padding-top: 0;
+    font-size: 1.1rem;
+    color: $color-text-accent-light; 
+  }
+}

@@ -1,12 +1,19 @@
 @use "../abstracts/" as *;
 
-.powerquality{
-  display: table-row;
+.powermodifier{
+  padding-left: space(2);
+  &__header{
+    display: table-row;
+  }
   &__name{
     display: table-cell;
     cursor: help;
     margin: 0;
     width: auto;
+  }
+  &__specific{
+    display: table-cell;
+    padding-left: space(1)
   }
   &__cost{
     padding-left: space(2);

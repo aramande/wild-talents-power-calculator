@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PowerForm from './components/powerform';
-import InfoBox, { IPowerItemInfo } from './components/infobox';
+import InfoBox from './components/infobox';
+import { IPowerItemInfo } from './interfaces/power.interface';
 
 function App() {
   const [info, setInfo] = useState<IPowerItemInfo>();

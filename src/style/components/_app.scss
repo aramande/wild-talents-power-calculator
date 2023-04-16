@@ -2,42 +2,46 @@
 .app{
   display: grid;
   width: 100vw;
-  height: 100vh;
-  grid-template-rows: 10px 200px auto 200px 10px;
+  grid-template-rows: 10px min-content min-content min-content 10px;
 
   grid-template-areas: 
     "header"
-    "info"
     "form"
+    "info"
     "list"
     "footer";
 
   @include screen.larger-than(md){
-    grid-template-rows: 10px 200px auto 10px;
+    height: 100vh;
+    grid-template-columns: auto 60vw;
+    grid-template-rows: 10px 300px auto 10px;
     grid-template-areas: 
       "header header"
       "form info"
       "form list"
       "footer footer";
   }
+  @include screen.larger-than(lg){
+    grid-template-columns: auto 30vw 30vw;
+    grid-template-rows: 10px auto 10px;
+    grid-template-areas: 
+      "header header header"
+      "form info list"
+      "footer footer footer";
+  }
   &__header{
     grid-area: header;
-    // background-color: blue;
   }
   &__form{
     grid-area: form;
-    // background-color: red;
   }
   &__info{
     grid-area: info;
-    // background-color: green;
   }
   &__powerlist{
     grid-area: list;
-    // background-color: gray;
   }
   &__footer{
     grid-area: footer;
-    // background-color: purple;
   }
 }

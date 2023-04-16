@@ -9,11 +9,21 @@
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "bootstrap": "^5.2.3",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-fontawesome": "^1.7.1",
+    "react-scripts": "^5.0.1",
+    "react-tooltip": "^5.11.1",
     "typescript": "^5.0.4",
     "web-vitals": "^2.1.4"
+  },
+  "overrides": {
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "sass": "^1.62.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,8 +48,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "sass": "^1.62.0"
   }
 }
