@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import PowerQuality from './powerquality';
-import { IPowerItemInfo, IPowerQualityInfo } from '../interfaces/power.interface';
-import { Modal } from 'react-bootstrap';
+import PowerQuality, { calculateCost } from './powerquality';
+import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
+import AddPowerQualityModal from '../modals/add-power-quality.modal';
+import useModal from '../hooks/useModal';
 
 interface PowerFormProps {
-  showInfo: (info: IPowerItemInfo) => void
+  showInfo: (info: IPowerItem) => void
 }
 
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
-  const [name, setName] = useState<string>();
-  const [addQualityModalOpen, openAddQualityModal] = useState(false);
+  const [name, setName] = useState<string>('Undefined Power');
+  const [addQualityModalOpen, toggleAddQualityModal] = useModal();
 
   function closeAddQualityModal() {
-    openAddQualityModal(false);
+    toggleAddQualityModal(false);
   }
   
 
-  const powerQualities: IPowerQualityInfo[] = [
-    {ref: 1, name: 'Attack', level: 0, cost: 0}
+  const powerQualities: IPowerQuality[] = [
+    {ref: 1, name: 'Attack', multiplier: 0, cost: 1}
   ];
   const info = powerQualities[0];
   
@@ -25,53 +26,42 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   info.modifiers.push({
     ref: 2,
     cost: 2,
-    level: 0,
+    multiplier: 1,
     name: 'Duration',
   });
   info.modifiers.push({
     ref: 3,
-    level: 2,
+    multiplier: 2,
+    cost: 1,
     name: 'Booster',
-    dynamicCost: (level) => Math.max(1, level + 1)
   });
   info.modifiers.push({
     ref: 4,
-    level: 0,
+    multiplier: 1,
     name: 'If/Then',
     specific: 'Random disadvantage',
     cost: -1
   });
+  const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + calculateCost(item), 0);
+
+  function saveNewQuality(result: IPowerQuality): void {
+    console.log('saving result', result);
+  }
 
   return (
     <section className='powerform'>
       <header>
         <h1><input onChange={() => setName} value={name} /></h1>
       </header>
+      <div className='powerform__dicecost'>({totalCost}/{totalCost*2}/{totalCost*4})</div>
       <article className='powerform__qualitylist'>
         {powerQualities.map(x => (
           <PowerQuality key={x.ref} info={x} showInfo={props.showInfo}></PowerQuality>
         ))}
       </article>
-      <button className='powerform__add btn btn--neutral' onClick={() => openAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+      <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
       <footer></footer>
-      <Modal
-        show={addQualityModalOpen}
-        onHide={closeAddQualityModal}>
-          <Modal.Dialog>
-            <Modal.Header closeButton>
-              <Modal.Title>Modal title</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-              <p>Modal body text goes here.</p>
-            </Modal.Body>
-
-            {/* <Modal.Footer>
-              <Button variant="secondary">Close</Button>
-              <Button variant="primary">Save changes</Button>
-            </Modal.Footer> */}
-          </Modal.Dialog>
-        </Modal>
+      <AddPowerQualityModal show={addQualityModalOpen} onClose={closeAddQualityModal} onSave={saveNewQuality} />
     </section>
   );
 

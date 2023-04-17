@@ -1,14 +1,12 @@
-export interface IPowerItemInfo{
+export interface IPowerItem{
   ref: number;
   name?: string;
-  level: number;
-  cost?: number;
-  dynamicCost?: (level: number) => number;
-  content?: JSX.Element;
+  multiplier: number;
+  cost: number;
   specific?: string;
 }
 
 
-export interface IPowerQualityInfo extends IPowerItemInfo{
-  modifiers?: IPowerItemInfo[];
+export interface IPowerQuality extends IPowerItem{
+  modifiers?: IPowerItem[];
 }

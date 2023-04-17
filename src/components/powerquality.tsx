@@ -1,25 +1,25 @@
 import React from 'react';
-import { IPowerItemInfo, IPowerQualityInfo } from '../interfaces/power.interface';
+import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
 import PowerModifier from './powermodfier';
 
 interface PowerQualityProps {
-  info: IPowerQualityInfo;
-  showInfo: (info: IPowerItemInfo) => void
+  info: IPowerQuality;
+  showInfo: (info: IPowerItem) => void
+}
+
+export function calculateCost(info: IPowerQuality) {
+  const powerQualityBaseCost = 2 + Math.max(0, info.cost * info.multiplier);
+  const modifierSumCost = info.modifiers ? info.modifiers.reduce((prev, cur) => prev + cur.cost * cur.multiplier, 0) : 0;
+  return Math.max(1, powerQualityBaseCost + modifierSumCost);
 }
 
 const PowerQuality: React.FC<PowerQualityProps> = ({ info, showInfo }) => {
-  function calculateCost(level: number, modifiers: IPowerItemInfo[]) {
-    const powerQualityBaseCost = 2 + Math.max(0, level);
-    const modifierSumCost = modifiers.reduce((prev, cur) => prev + (cur.cost ?? cur.dynamicCost?.(cur.level) ?? 0), 0);
-    return Math.max(1, powerQualityBaseCost + modifierSumCost);
-  }
-
-  const cost = calculateCost(info.level, info.modifiers ?? [])
+  const cost = calculateCost(info);
 
   return (
     <>
       <header className='powerquality'>
-        <h2 className='powerquality__name' onClick={() => showInfo(info)}>{info.level > 0 ? `+${info.level} ` : ''}{info.name}</h2>
+        <h2 className='powerquality__name' onClick={() => showInfo(info)}>{info.multiplier > 1 ? `+${info.multiplier} ` : ''}{info.name}</h2>
         <small className="powerquality__cost">{`(${cost})`}</small>
         <button className='powerquality__edit btn btn--neutral'><i className='fa-solid fa-edit'></i></button>
       </header>

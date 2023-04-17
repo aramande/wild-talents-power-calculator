@@ -46,6 +46,7 @@
     border-radius: 0 0 $border-radius-card $border-radius-card;
   }
   .btn-close {
+    cursor: pointer;
     position: absolute;
     top: $modal-padding;
     right: $modal-padding;

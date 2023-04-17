@@ -1,7 +1,8 @@
 
 const lookup: {[key: string]: string[]} = {
   attack: [
-    'With the Attacks quality, you can attack things with your power. Roll its dice like any other attack, using height to determine hit location. It inflicts width in Shock and Killing damage. Without the Attacks quality, your can\'t use your power to attack.'
+    'With the Attacks quality, you can attack things with your power. Roll its dice like any other attack, using height to determine hit location. It inflicts width in Shock and Killing damage. Without the Attacks quality, your can\'t use your power to attack.',
+    'If your power has the Attacks quality, each additional Attacks level adds +1 damage to successful attacks.'
   ],
   booster: [
     'Each time you take Booster on a Power Quality, it multiplies its Power Capacity by 10. If your Power Quality has more than one capacity, you can decide when you use the power whether Booster applies to one or another; and if you have more than one instance of Booster, you can divide the Booster levels between the capacities however you like each time you use it.'

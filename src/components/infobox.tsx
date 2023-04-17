@@ -1,10 +1,10 @@
 import React from 'react';
-import { IPowerItemInfo } from '../interfaces/power.interface';
+import { IPowerItem } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
 
 
 interface InfoBoxProps {
-  info?: IPowerItemInfo;
+  info?: IPowerItem;
 }
 
 const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
@@ -17,7 +17,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
       <div className='infobox__scrollbox'>
         <div>
           {description.map((x, i) => (<p key={i}>{x}</p>))}
-          <div>{info.content}</div>
+          {/* <div>{info.content}</div> */}
         </div>
       </div>
     </div>
