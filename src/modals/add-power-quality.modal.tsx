@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { IPowerQuality } from '../interfaces/power.interface';
+import { IPowerQuality, TCapacity } from '../interfaces/power.interface';
 
 interface AddPowerQualityModalProps {
   show: boolean,
@@ -9,11 +9,43 @@ interface AddPowerQualityModalProps {
 }
 
 const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
+  const [quality, setQuality] = useState('Attack');
+  const [capacity, setCapacity] = useState<TCapacity>('Mass');
   const result: IPowerQuality = {
     ref: 0,
     multiplier: 1,
-    cost: 0
+    cost: 1,
+    name: quality,
+    capacities: [capacity]
   };
+
+  function updateQuality(quality: string){
+    if(isUnavailable(quality, capacity)){
+      if(quality == 'Attack') setCapacity('Mass');
+      if(quality == 'Defend') setCapacity('Self');
+      if(quality == 'Useful') setCapacity('Mass');
+    }
+    setQuality(quality);
+  }
+  function isActive(value: string, expected: string) {
+    return value == expected ? 'btn--primary ' : '';
+  }
+  function isUnavailable(quality: string, capacity: string) {
+    let disabled = false;
+    switch(quality){
+      case 'Attack':
+        if(capacity != 'Mass' && capacity != 'Range') disabled = true;
+        break;
+      case 'Defend':
+        if(capacity != 'Self') disabled = true;
+        break;
+      case 'Useful':
+        if(capacity != 'Mass' && capacity != 'Range' && capacity != 'Speed') disabled = true;
+        break;
+    }
+    return disabled ? 'btn--disabled ' : '';
+  }
+
   return (
     <Modal
       show={props.show}
@@ -24,7 +56,17 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          <p>Modal body text goes here.</p>
+          <div className="btn-group" role="group" aria-label="Power Quality">
+            <Button type="button" className={isActive(quality, 'Active') + 'btn'} onClick={() => updateQuality('Attack')}>Attack</Button>
+            <Button type="button" className={isActive(quality, 'Defend') + 'btn'} onClick={() => updateQuality('Defend')}>Defend</Button>
+            <Button type="button" className={isActive(quality, 'Useful') + 'btn'} onClick={() => updateQuality('Useful')}>Useful</Button>
+          </div>
+          <div className="btn-group" role="group" aria-label="Power Capacity">
+            <Button type="button" className={isActive(capacity, 'Mass') + isUnavailable(quality, 'Mass') + 'btn'} onClick={() =>  setCapacity('Mass')}>Mass</Button>
+            <Button type="button" className={isActive(capacity, 'Range') + isUnavailable(quality, 'Range') + 'btn'} onClick={() => setCapacity('Range')}>Range</Button>
+            <Button type="button" className={isActive(capacity, 'Speed') + isUnavailable(quality, 'Speed') + 'btn'} onClick={() => setCapacity('Speed')}>Speed</Button>
+            <Button type="button" className={isActive(capacity, 'Self') + isUnavailable(quality, 'Self') + 'btn'} onClick={() => setCapacity('Self')}>Self</Button>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
@@ -34,6 +76,7 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
       </Modal.Dialog>
     </Modal>
   );
+
 };
 
 export default AddPowerQualityModal;

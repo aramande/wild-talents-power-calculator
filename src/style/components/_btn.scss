@@ -89,6 +89,10 @@
       background-color: transparent;
     }
   }
+  &--disabled {
+    opacity: 0.1;
+    pointer-events: none;
+  }
 
   &__icon {
     text-align: center;

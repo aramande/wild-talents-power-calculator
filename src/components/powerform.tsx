@@ -18,7 +18,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   
 
   const powerQualities: IPowerQuality[] = [
-    {ref: 1, name: 'Attack', multiplier: 0, cost: 1}
+    {ref: 1, name: 'Attack', multiplier: 0, cost: 1, capacities: ['Range']}
   ];
   const info = powerQualities[0];
   
