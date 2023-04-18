@@ -17,16 +17,19 @@ const PowerQuality: React.FC<PowerQualityProps> = ({ info, showInfo }) => {
   const cost = calculateCost(info);
 
   return (
-    <>
-      <header className='powerquality'>
-        <h2 className='powerquality__name' onClick={() => showInfo(info)}>{info.multiplier > 1 ? `+${info.multiplier} ` : ''}{info.name}</h2>
+    <div className='powerquality'>
+      <header className='powerquality__row'>
+        <h2 className='powerquality__name' onClick={() => showInfo(info)}>{info.multiplier > 0 ? `+${info.multiplier} ` : ''}{info.name}</h2>
         <small className="powerquality__cost">{`(${cost})`}</small>
         <button className='powerquality__edit btn btn--neutral'><i className='fa-solid fa-edit'></i></button>
       </header>
-      {info.modifiers && info.modifiers.map(x => (
-        <div key={x.ref}><PowerModifier info={x} showInfo={showInfo} /></div>
-      ))}
-    </>
+      <small>Capacities: {info.capacities.join(', ')}</small>
+      <div className='powerquality__modifier'>
+        {info.modifiers && info.modifiers.map(x => (
+          <div key={x.ref}><PowerModifier info={x} showInfo={showInfo} /></div>
+        ))}
+      </div>
+    </div>
   );
 };
 

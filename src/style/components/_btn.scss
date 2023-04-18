@@ -42,13 +42,12 @@
   &--small {
     --focus-outline-width: 1px;
     font-size: $font-size-300;
-    font-weight: $font-weight-400;
+    padding: 0.1rem 0.3rem;
   }
   &--big {
     --focus-outline-width: 1px;
     padding: 0.5rem 1rem;
     font-size: $font-size-600;
-    font-weight: $font-weight-700;
   }
 
   // Color Variations
@@ -68,10 +67,10 @@
     }
   }
   &--accent {
-    color: $neutral-100;
-    background-color: $accent-400;
+    color: $neutral-900;
+    background-color: $accent-500;
     &:hover {
-      background-color: $accent-500;
+      background-color: $accent-700;
     }
   }
   &--inverse {

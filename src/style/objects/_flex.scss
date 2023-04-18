@@ -1,0 +1,12 @@
+@use '../abstracts/' as *;
+
+.flex{
+  display: flex;
+
+  &--gap1{
+    gap: space(1);
+  }
+  &--gap2{
+    gap: space(2);
+  }
+}

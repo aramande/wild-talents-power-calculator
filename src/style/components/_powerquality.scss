@@ -1,19 +1,18 @@
 @use "../abstracts/" as *;
 
 .powerquality{
-  display: table-row;
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  margin-bottom: space(4);
+
+  &__row{
+    display: flex;
+    gap: space(2);
+  }
   &__name{
-    display: table-cell;
     cursor: help;
     margin: 0;
     width: auto;
-  }
-  &__cost{
-    padding-left: space(2);
-    display: table-cell;
-  }
-  &__edit{
-    margin-left: space(2);
-    display: table-cell;
   }
 }

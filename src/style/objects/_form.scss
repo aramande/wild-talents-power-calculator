@@ -1,0 +1,13 @@
+@use '../abstracts/' as *;
+
+.form{
+  margin-top: space(2);
+  // &__header{
+  //   margin: 0;
+  //   padding: 0;
+  // }
+  &__label{
+    font-weight: $font-weight-bold;
+    text-align: right;
+  }
+}

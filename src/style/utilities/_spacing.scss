@@ -1,0 +1,19 @@
+@use '../abstracts/' as *;
+
+.top{
+  &--0{
+    top: 0;
+  }
+}
+
+.right{
+  &--0{
+    right: 0;
+  }
+}
+
+.spaceabove{
+  &--2{
+    margin-top: space(2);
+  }
+}

@@ -26,19 +26,29 @@ h4 {
   color: $color-text-heading;
   font-weight: $font-weight-heading;
   font-family: $font-family-heading;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
   font-size: $font-size-800;
+  margin-top: 1.2rem;
+  margin-bottom: 1rem;
 }
 h2 {
   font-size: $font-size-700;
+  margin-top: 1.2rem;
+  margin-bottom: 1rem;
 }
 h3 {
   font-size: $font-size-600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 h4 {
   font-size: $font-size-500;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 p {

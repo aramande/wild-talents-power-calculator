@@ -32,7 +32,6 @@
   &-body {
     padding: $modal-padding;
     background-color: $neutral-200;
-    width: max(200px, 20vw);
   }
   
   &.show &-dialog {
