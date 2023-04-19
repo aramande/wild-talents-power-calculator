@@ -1,0 +1,31 @@
+@use '../abstracts/' as *;
+
+.btnlist{
+  display: flex;
+  flex-direction: column;
+  &__btn{
+    outline: none;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+
+    background-color: $color-surface-light;
+    color: $color-text-body;
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+    &:first-child{
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+    }
+    &:last-child{
+      border-bottom-left-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+    }
+    &:hover{
+      background-color: $neutral-200;
+    }
+  }
+  &__btn + &__btn{
+    border-top: $neutral-500 1px solid;
+  }
+}

@@ -3,6 +3,7 @@ export interface IPowerItem{
   name?: string;
   multiplier: number;
   cost: number;
+  costOptions?: string;
   specific?: string;
 }
 

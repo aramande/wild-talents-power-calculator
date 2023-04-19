@@ -6,6 +6,9 @@
   //   margin: 0;
   //   padding: 0;
   // }
+  &__row{
+    display: flex;
+  }
   &__label{
     font-weight: $font-weight-bold;
     text-align: right;
