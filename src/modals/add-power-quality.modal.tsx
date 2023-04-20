@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { IPowerItem, IPowerQuality, TCapacity } from '../interfaces/power.interface';
+import { getDescription } from '../helpers/get-description';
 
 interface AddPowerQualityModalProps {
   show: boolean,
@@ -9,13 +10,15 @@ interface AddPowerQualityModalProps {
 }
 
 const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
-  let refCounter = 0;
+  const refCounter = useRef<number>();
+  const [description, setDescription] = useState<string[]>([]);
   const [quality, setQuality] = useState('Attack');
   const [capacity, setCapacity] = useState<TCapacity>('Mass');
   const [multiplier, setMultiplier] = useState(1);
   const [cost, setCost] = useState(1);
   const [addedModifiers, setAddedModifiers] = useState<IPowerItem[]>([]);
   const [exampleModifier, setExampleModifierState] = useState<IPowerItem>(makeModifier('Custom'));
+
   const result: IPowerQuality = {
     ref: 0,
     multiplier: 0,
@@ -24,13 +27,13 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
     capacities: [capacity],
     modifiers: addedModifiers
   };
-  const exampleModifiers: IPowerItem[] = [
-    makeModifier('Custom'),
+  const exampleExtra: IPowerItem[] = [
     makeModifier('Area'),
     makeModifier('Augment', 4),
     makeModifier('Booster'),
     makeModifier('Burn', 2),
     makeModifier('Controlled Effect'),
+    makeModifier('Custom'),
     makeModifier('Daze'),
     makeModifier('Deadly', 1, "+1 or +2"),
     makeModifier('Disintegrate'),
@@ -53,12 +56,47 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
     makeModifier('Spray'),
     makeModifier('Subtle'),
     makeModifier('Traumatic'),
-    makeModifier('Variable Effect', 4),
-    makeModifier('If/Then', -1)
+    makeModifier('Variable Effect', 4)
+  ]
+    
+  const exampleFlaws: IPowerItem[] = [
+    makeModifier('Always On'),
+    makeModifier('Armored Defense', -2),
+    makeModifier('Attached', -1, '-1 or -2'),
+    makeModifier('Backfires', -2),
+    makeModifier('Base Will Cost', -4),
+    makeModifier('Delayed Effect', -2),
+    makeModifier('Depleted'),
+    makeModifier('Direct Feed', -2),
+    makeModifier('Exhausted', -3),
+    makeModifier('Focus'),
+    makeModifier('Fragile'),
+    makeModifier('Full Power Only'),
+    makeModifier('Go Last'),
+    makeModifier('Horrifying'),
+    makeModifier('If/Then', -1),
+    makeModifier('Limited Damage'),
+    makeModifier('Limited Width'),
+    makeModifier('Locational'),
+    makeModifier('Loopy'),
+    makeModifier('Mental Strain', -2),
+    makeModifier('No Physical Change'),
+    makeModifier('Obvious'),
+    makeModifier('One Use', -4),
+    makeModifier('Reduced Capacities'),
+    makeModifier('Scattered Damage'),
+    makeModifier('Self Only', -3),
+    makeModifier('Slow', -2),
+    makeModifier('Touch Only', -2),
+    makeModifier('Uncontrollable')
   ];
 
   function makeModifier(name: string, cost: number = 1, options?: string): IPowerItem {
-    return { name: name, ref: refCounter++, cost: cost || cost, costOptions: options, multiplier: 1 };
+    refCounter.current = refCounter.current ?? 0;
+    const ref = refCounter.current;
+    refCounter.current = refCounter.current + 1;
+    console.log('adding', ref, refCounter.current);
+    return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1 };
   }
 
   function updateQuality(quality: string){
@@ -70,11 +108,11 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
     setQuality(quality);
   }
   function addModifier(formData: FormData){
+    const ref = refCounter.current ?? 0;
+    refCounter.current = (refCounter.current ? refCounter.current + 1 : 0);
     setAddedModifiers((mods) => {
-      const max = mods.reduce((prev, current) => (prev > current.ref) ? prev : current.ref, 0);
-      
       return [...mods, {
-        ref: max + 1,
+        ref: ref,
         name: formData.get('name')?.toString(),
         specific: formData.get('specific')?.toString(),
         cost: cost,
@@ -89,6 +127,7 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
   }
   function setExampleModifier(modifier: IPowerItem){
     setCost(modifier.cost);
+    setDescription(getDescription(exampleModifier.name));
     setExampleModifierState(modifier);
   }
   function sortModifiers(a: IPowerItem, b: IPowerItem): number {
@@ -127,7 +166,7 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
 
         <Modal.Body>
           <section className='powerquality-modal'>
-            <div>
+            <div className='powerquality-modal__creation'>
               <div className="btn-group" role="group" aria-label="Power Quality">
                 <Button type="button" className={isActive(quality, 'Attack') + 'btn'} onClick={() => updateQuality('Attack')}>Attack</Button>
                 <Button type="button" className={isActive(quality, 'Defend') + 'btn'} onClick={() => updateQuality('Defend')}>Defend</Button>
@@ -141,13 +180,12 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
               </div>
 
               <form onSubmit={(e) => { addModifier(new FormData(e.currentTarget)); e.preventDefault() }}>
-                <input type="hidden" value='Custom' name='name' />
                 <table className='form'>
                   <tbody>
                     <tr><td colSpan={2}><h3 className='form__header'>Extras/Flaws</h3></td></tr>
                     <tr>
                       <th className='form__label'>Name</th>
-                      <td className='form__value'><input type="text" name='name' value={exampleModifier.name} disabled={true} /></td>
+                      <td className='form__value'><input type="text" name='name' value={exampleModifier.name} readOnly={true} /></td>
                     </tr>
                     <tr>
                       <th className='form__label'>Note</th>
@@ -186,15 +224,25 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
                 ))}
               </div>
             </div>
-            <aside>
+            <aside className='powerquality-modal__examples'>
               <div className='btnlist'>
-                {exampleModifiers.map(x => (
-                  <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'btnlist__btn--active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
+                {exampleExtra.map(x => (
+                  <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
+                    {x.name} ({x.costOptions ? x.costOptions : x.cost})
+                  </button>
+                ))}
+              </div>
+              <div className='btnlist'>
+                {exampleFlaws.map(x => (
+                  <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
                     {x.name} ({x.costOptions ? x.costOptions : x.cost})
                   </button>
                 ))}
               </div>
             </aside>
+            <div className='powerquality-modal__description'>
+              {description.map((x, i) => (<p key={i}>{x}</p>))}
+            </div>
           </section>
         </Modal.Body>
 

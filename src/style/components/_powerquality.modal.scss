@@ -1,4 +1,21 @@
+@use '../abstracts/' as *;
+
 .powerquality-modal{
   display: grid;
-  grid-template-columns: 255px 200px;
+  grid-template-columns: 255px 400px;
+  grid-template-rows: 400px 300px;
+  gap: space(2);
+  
+  &__description{
+    grid-column-start: 2;
+  }
+
+  &__examples{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: space(2);
+    height: 400px;
+    overflow-y: auto;
+    border-radius: 0.25rem;
+  }
 }

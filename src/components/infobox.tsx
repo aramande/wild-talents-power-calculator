@@ -17,7 +17,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
       <div className='infobox__scrollbox'>
         <div>
           {description.map((x, i) => (<p key={i}>{x}</p>))}
-          {/* <div>{info.content}</div> */}
         </div>
       </div>
     </div>

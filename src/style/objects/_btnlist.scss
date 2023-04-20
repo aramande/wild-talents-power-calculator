@@ -13,19 +13,15 @@
     color: $color-text-body;
     padding: 0.25rem 0.5rem;
     text-align: left;
-    &:first-child{
-      border-top-left-radius: 0.25rem;
-      border-top-right-radius: 0.25rem;
-    }
-    &:last-child{
-      border-bottom-left-radius: 0.25rem;
-      border-bottom-right-radius: 0.25rem;
-    }
     &:hover{
       background-color: $neutral-200;
+    }
+    &.active{
+      background-color: $color-surface-accent;
     }
   }
   &__btn + &__btn{
     border-top: $neutral-500 1px solid;
   }
+
 }
