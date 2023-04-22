@@ -4,13 +4,21 @@ const lookup: {[key: string]: string[]} = {
     'With the Attacks quality, you can attack things with your power. Roll its dice like any other attack, using height to determine hit location. It inflicts width in Shock and Killing damage. Without the Attacks quality, you can\'t use your power to attack.',
     'If your power has the Attacks quality, each additional Attacks level adds +1 damage to successful attacks.'
   ],
+  defends: [
+    'With the Defends quality, you can defend yourself with your power. Roll its dice like any other defense roll, with height and width determining which dice it can gobble from attacks against you. Without the Defends quality, you can\'t use your power to defend.',
+    'If it has the Defends quality, each additional Defends level adds one gobble die to a successful defense, using the height and width of the defense roll.'
+  ],
+  useful: [
+    'With the Useful quality, you can do something else with your power that\'s neither an attack nor a defense. This can be literally anything you want: flying, creating frogs, reading minds and healing super-fast are all examples of Useful Power Qualities. Roll the power\'s dice to activate the power, using width for speed and height for effectiveness, as usual.',
+    'If it has the Useful quality, each additional Useful level offsets one penalty die when you use the power in difficult circumstances.'
+  ],
   booster: [
     'Each time you take Booster on a Power Quality, it multiplies its Power Capacity by 10. If your Power Quality has more than one capacity, you can decide when you use the power whether Booster applies to one or another; and if you have more than one instance of Booster, you can divide the Booster levels between the capacities however you like each time you use it.'
   ],
   duration: [
     'With a single successful roll, your Miracle remains in effect for the rest of the current scene or series of actions or rounds.',
     'The exact duration is fluid and depends on the circumstances; it might be a few rounds or it may be several minutes, or longer if the players and GM agree.',
-    'You don\'t have to concentrate on maintaining the action or roll it again, and can perform other actions while it’s still going.',
+    'You don\'t have to concentrate on maintaining the action or roll it again, and can perform other actions while it\'s still going.',
     'If your Miracle has the Attacks quality, it launches one attack against the same target with the same roll every single round.',
     'If it has Defends, it automatically defends, with the same set, against each attack against you.',
     'If it has Useful, it automatically conducts the same action once per round with the same roll.',

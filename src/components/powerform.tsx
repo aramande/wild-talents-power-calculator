@@ -3,6 +3,7 @@ import PowerQuality, { calculateCost } from './powerquality';
 import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
 import AddPowerQualityModal from '../modals/add-power-quality.modal';
 import useModal from '../hooks/useModal';
+import EditPowerQualityModal from '../modals/edit-power-quality.modal';
 
 interface PowerFormProps {
   showInfo: (info: IPowerItem) => void
@@ -11,59 +12,49 @@ interface PowerFormProps {
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [name, setName] = useState<string>('Undefined Power');
   const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
+  const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
+  const [editQualityModalOpen, toggleEditQualityModal] = useModal();
 
   function closeAddQualityModal() {
     toggleAddQualityModal(false);
   }
+  function closeEditQualityModal() {
+    toggleEditQualityModal(false);
+  }
+  function editQuality(quality: IPowerQuality){
+    setEditTarget(quality);
+    toggleEditQualityModal(true);
+  }
   
-
-  // const powerQualities: IPowerQuality[] = [
-  //   {ref: 1, name: 'Attack', multiplier: 0, cost: 1, capacities: ['Range']}
-  // ];
-  // const info = powerQualities[0];
-  
-  // info.modifiers = [];
-  // info.modifiers.push({
-  //   ref: 2,
-  //   cost: 2,
-  //   multiplier: 1,
-  //   name: 'Duration',
-  // });
-  // info.modifiers.push({
-  //   ref: 3,
-  //   multiplier: 2,
-  //   cost: 1,
-  //   name: 'Booster',
-  // });
-  // info.modifiers.push({
-  //   ref: 4,
-  //   multiplier: 1,
-  //   name: 'If/Then',
-  //   specific: 'Random disadvantage',
-  //   cost: -1
-  // });
   const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + calculateCost(item), 0);
 
   function saveNewQuality(result: IPowerQuality): void {
     setPowerQualities((qualities) => [...qualities, result]);
-    console.log('saving result', result);
+  }
+
+  function saveEditedQuality(result: IPowerQuality): void {
+    setPowerQualities((qualities) => qualities.map(x => x.ref === result.ref ? result : x));
   }
 
   return (
     <section className='powerform'>
       <header>
-        <h1><input onChange={() => setName} value={name} /></h1>
+        <h1><input onChange={(e) => setName(e.target.value)} value={name} /></h1>
       </header>
       <div className='powerform__dicecost'>({totalCost}/{totalCost*2}/{totalCost*4})</div>
       <article className='powerform__qualitylist'>
         {powerQualities.map(x => (
-          <PowerQuality key={x.ref} info={x} showInfo={props.showInfo}></PowerQuality>
+          <div key={x.ref}>  
+            <button className='powerform__edit btn btn--neutral' onClick={(() => editQuality(x))}><i className='fa-solid fa-edit'></i></button>
+            <PowerQuality info={x} showInfo={props.showInfo}></PowerQuality>
+          </div>
         ))}
       </article>
       <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
       <footer></footer>
       <AddPowerQualityModal show={addQualityModalOpen} onClose={closeAddQualityModal} onSave={saveNewQuality} />
+      <EditPowerQualityModal show={editQualityModalOpen} initialData={editTarget} onClose={closeEditQualityModal} onSave={saveEditedQuality} />
     </section>
   );
 

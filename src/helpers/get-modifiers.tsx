@@ -2,7 +2,7 @@ import { IPowerItem } from '../interfaces/power.interface';
 
 const refCounter: {current: number} = {current: 0};
 const extras: IPowerItem[] = [
-  makeModifier('Area'),
+  makeModifier('Area', 1, '+1 per Area die'),
   makeModifier('Augment', 4),
   makeModifier('Booster'),
   makeModifier('Burn', 2),

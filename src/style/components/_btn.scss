@@ -73,6 +73,13 @@
       background-color: $accent-700;
     }
   }
+  &--delete {
+    color: $neutral-900;
+    background-color: $accent-400;
+    &:hover {
+      background-color: $accent-200;
+    }
+  }
   &--inverse {
     color: $neutral-100;
     background-color: $neutral-500;
