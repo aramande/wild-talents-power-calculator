@@ -1,20 +1,35 @@
 @use '../abstracts/' as *;
+@use "../tools/screen";
 
 .powerquality-modal{
   display: grid;
-  grid-template-columns: 255px 400px;
-  grid-template-rows: 400px 300px;
   gap: space(2);
+  max-height: calc(95vh - 120px);
+  padding: space(3);
+  grid-template-columns: 90vw;
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @include screen.larger-than(md){
+    grid-template-columns: 255px 400px;
+    grid-template-rows: 400px 300px;
+    overflow-y: hidden;
+  }
   
   &__description{
-    grid-column-start: 2;
+    overflow-y: auto;
+    height: 100%;
+    @include screen.larger-than(md){
+      grid-column-start: 2;
+    }
   }
 
   &__examples{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: space(2);
-    height: 400px;
+    height: 100%;
     overflow-y: auto;
     border-radius: 0.25rem;
   }

@@ -8,9 +8,10 @@ interface PowerQualityProps {
 }
 
 export function calculateCost(info: IPowerQuality) {
-  const powerQualityBaseCost = 2 + Math.max(0, info.cost * info.multiplier);
+  
+  const powerQualityBaseCost = (info.emulatedPower ? 0 : 2) + Math.max(0, info.cost * info.multiplier);
   const modifierSumCost = info.modifiers ? info.modifiers.reduce((prev, cur) => prev + cur.cost * cur.multiplier, 0) : 0;
-  return Math.max(1, powerQualityBaseCost + modifierSumCost);
+  return Math.max((info.emulatedPower ? 0 : 1), powerQualityBaseCost + modifierSumCost);
 }
 
 const PowerQuality: React.FC<PowerQualityProps> = ({ info, showInfo }) => {

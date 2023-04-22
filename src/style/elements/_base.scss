@@ -61,4 +61,8 @@ input{
   border: none;
   outline: none;
   border-bottom: $color-border-input 1px solid;
+  &[readonly='']{
+    background-color: transparent;
+    border: none;
+  }
 }

@@ -11,6 +11,7 @@ export interface IPowerItem{
 export interface IPowerQuality extends IPowerItem{
   modifiers?: IPowerItem[];
   capacities: TCapacity[];
+  emulatedPower: boolean;
 }
 
 export type TCapacity = 'Mass' | 'Range' | 'Speed' | 'Touch' | 'Self' | 'N/A';

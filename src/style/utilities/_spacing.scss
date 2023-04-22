@@ -20,3 +20,11 @@
     margin-top: space(2);
   }
 }
+.gap{
+  &--1{
+    gap: space(1);
+  }
+  &--2{
+    gap: space(2);
+  }
+}
