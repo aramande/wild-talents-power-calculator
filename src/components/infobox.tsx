@@ -1,6 +1,7 @@
 import React from 'react';
 import { IPowerItem } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
+import ReactMarkdown from 'react-markdown';
 
 
 interface InfoBoxProps {
@@ -16,7 +17,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
       {info.specific && (<span className='infobox__specific'>{info.specific}</span>)}
       <div className='infobox__scrollbox'>
         <div>
-          {description.map((x, i) => (<p key={i}>{x}</p>))}
+          {description.map((x, i) => (<p key={i}><ReactMarkdown>{x}</ReactMarkdown></p>))}
         </div>
       </div>
     </div>

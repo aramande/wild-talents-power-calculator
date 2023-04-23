@@ -6,6 +6,7 @@ import { calculateCost } from '../components/powerquality';
 import { Modifiers } from '../helpers/get-modifiers';
 import { PowerQualityActionKind, usePowerQuality } from '../hooks/usePowerQuality';
 import { createAction } from '../helpers/Reducer';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 interface PowerQualityEditorProps {
   initialData?: IPowerQuality,
@@ -174,7 +175,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
         </div>
       </aside>
       <div className='powerquality-modal__description'>
-        {description.map((x, i) => (<p key={i}>{x}</p>))}
+        {description.map((x, i) => (<ReactMarkdown key={i}>{x}</ReactMarkdown>))}
       </div>
     </section>
   );
