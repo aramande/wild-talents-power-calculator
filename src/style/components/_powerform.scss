@@ -11,4 +11,15 @@
   &__add{
     margin-top: space(2);
   }
+  &__btnfooter{
+    margin-top: space(4);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  &__edit{
+    position: absolute;
+    top: space(1);
+    right: space(1);
+  }
 }

@@ -3,6 +3,7 @@
   display: grid;
   width: 100vw;
   grid-template-rows: 10px min-content min-content min-content 10px;
+  overflow-x: auto;
 
   grid-template-areas: 
     "header"
@@ -13,21 +14,23 @@
 
   @include screen.larger-than(md){
     height: 100vh;
-    grid-template-columns: auto 60vw;
-    grid-template-rows: 10px 300px auto 10px;
+    grid-template-columns: 360px 1fr;
+    grid-template-rows: 10px 1fr 1fr 10px;
     grid-template-areas: 
       "header header"
       "form info"
       "form list"
       "footer footer";
+    overflow-x: hidden;
   }
   @include screen.larger-than(lg){
-    grid-template-columns: auto 30vw 30vw;
-    grid-template-rows: 10px auto 10px;
+    grid-template-columns: 360px 1fr 1fr;
+    grid-template-rows: 10px 1fr 10px;
     grid-template-areas: 
       "header header header"
       "form info list"
       "footer footer footer";
+    overflow-x: hidden;
   }
   &__header{
     grid-area: header;

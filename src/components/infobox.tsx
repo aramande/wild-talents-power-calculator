@@ -18,7 +18,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
       {modifier.specific && (<span className='infobox__specific'>{modifier.specific}</span>)}
       <div className='infobox__scrollbox'>
         <div>
-          {description.map((x, i) => (<p key={i}><ReactMarkdown>{x}</ReactMarkdown></p>))}
+          {description.map((x, i) => (<ReactMarkdown key={i}>{x}</ReactMarkdown>))}
         </div>
       </div>
     </div>

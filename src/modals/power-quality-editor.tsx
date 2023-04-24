@@ -26,8 +26,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   },[quality]);
 
   function setCapacity(capacity: TCapacity) {
-    //TODO: Verify if able to set capacity
-    dispatch(createAction(PowerQualityActionKind.SET_CAPACITY, capacity))
+    dispatch(createAction(PowerQualityActionKind.SET_MAIN_CAPACITY, capacity))
   }
   function updateQuality(qualityName: string){
     if(isUnavailable(qualityName, quality.capacities[0])){
@@ -99,10 +98,10 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
           <Button type="button" className={isActive(quality.name, 'Useful') + 'btn'} onClick={() => updateQuality('Useful')}>Useful</Button>
         </div>
         <div className="btn-group" role="group" aria-label="Power Capacity">
-          <Button type="button" className={isActive(quality.capacities[0], 'Mass') + isUnavailable(quality.name, 'Mass') + 'btn'} onClick={() =>  setCapacity('Mass')}>Mass</Button>
-          <Button type="button" className={isActive(quality.capacities[0], 'Range') + isUnavailable(quality.name, 'Range') + 'btn'} onClick={() => setCapacity('Range')}>Range</Button>
-          <Button type="button" className={isActive(quality.capacities[0], 'Speed') + isUnavailable(quality.name, 'Speed') + 'btn'} onClick={() => setCapacity('Speed')}>Speed</Button>
-          <Button type="button" className={isActive(quality.capacities[0], 'Self') + isUnavailable(quality.name, 'Self') + 'btn'} onClick={() => setCapacity('Self')}>Self</Button>
+          <Button type="button" className={isActive(quality.capacity, 'Mass') + isUnavailable(quality.name, 'Mass') + 'btn'} onClick={() =>  setCapacity('Mass')}>Mass</Button>
+          <Button type="button" className={isActive(quality.capacity, 'Range') + isUnavailable(quality.name, 'Range') + 'btn'} onClick={() => setCapacity('Range')}>Range</Button>
+          <Button type="button" className={isActive(quality.capacity, 'Speed') + isUnavailable(quality.name, 'Speed') + 'btn'} onClick={() => setCapacity('Speed')}>Speed</Button>
+          <Button type="button" className={isActive(quality.capacity, 'Self') + isUnavailable(quality.name, 'Self') + 'btn'} onClick={() => setCapacity('Self')}>Self</Button>
         </div>
         <div className='flex gap-1'>
           <strong>Level</strong>

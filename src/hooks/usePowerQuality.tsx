@@ -6,6 +6,7 @@ export enum PowerQualityActionKind {
   SET_REF = 'set-ref',
   SET_NAME = 'set-name',
   SET_CAPACITY = 'set-capacity',
+  SET_MAIN_CAPACITY = 'set-main-capacity',
   ADD_CAPACITY = 'add-capacity',
   SET_EMULATED = 'set-emulated',
   INC_MULTIPLIER = 'increment-multiplier',
@@ -29,6 +30,11 @@ type SetCapacityAction = Action<typeof PowerQualityActionKind.SET_CAPACITY, TCap
 function reduceSetCapacityAction(state: IPowerQuality, action: SetCapacityAction): IPowerQuality {
   if (!action.payload) return state;
   return {...state, capacities: [action.payload]};
+}
+type SetMainCapacityAction = Action<typeof PowerQualityActionKind.SET_MAIN_CAPACITY, TCapacity>;
+function reduceSetMainCapacityAction(state: IPowerQuality, action: SetMainCapacityAction): IPowerQuality {
+  if (!action.payload) return state;
+  return {...state, capacity: action.payload};
 }
 type AddCapacityAction = Action<typeof PowerQualityActionKind.ADD_CAPACITY, TCapacity>;
 function reduceAddCapacityAction(state: IPowerQuality, action: AddCapacityAction): IPowerQuality {
@@ -63,6 +69,7 @@ export type PowerQualityActions =
   | SetRefAction 
   | SetQualityAction 
   | SetCapacityAction 
+  | SetMainCapacityAction 
   | AddCapacityAction 
   | SetEmulatedAction 
   | IncrementMultiplierAction 
@@ -79,6 +86,8 @@ function powerQualityReducer(state: IPowerQuality, action: PowerQualityActions):
       return reduceSetRefAction(state, action);
     case PowerQualityActionKind.SET_CAPACITY:
       return reduceSetCapacityAction(state, action);
+    case PowerQualityActionKind.SET_MAIN_CAPACITY:
+      return reduceSetMainCapacityAction(state, action);
     case PowerQualityActionKind.ADD_CAPACITY:
       return reduceAddCapacityAction(state, action);
     case PowerQualityActionKind.SET_EMULATED:
@@ -103,14 +112,11 @@ export function usePowerQuality(initialData?: IPowerQuality): [IPowerQuality, Re
     cost: 1,
     emulatedPower: false,
     name: 'Attack',
-    capacities: ['Mass'],
+    capacity: 'Mass',
+    capacities: [],
     modifiers: []
   };
   const [characters, dispatch] = useReducer(powerQualityReducer, initialData ?? result);
-
-  // useEffect(() => {
-  //   setCharacterStorage((c) => characters);
-  // }, [characters, setCharacterStorage]);
 
   return [characters, dispatch];
 }
