@@ -1,7 +1,7 @@
-import { IPowerItem } from '../interfaces/power.interface';
+import { IPowerItem, IPowerModifier } from '../interfaces/power.interface';
 
 const refCounter: {current: number} = {current: 0};
-const extras: IPowerItem[] = [
+const extras: IPowerModifier[] = [
   makeModifier('Area', 1, '+1 per Area die'),
   makeModifier('Augment', 4),
   makeModifier('Booster'),
@@ -35,7 +35,7 @@ const extras: IPowerItem[] = [
   makeModifier('Variable Effect', 4)
 ]
   
-const flaws: IPowerItem[] = [
+const flaws: IPowerModifier[] = [
   makeModifier('Always On', -1),
   makeModifier('Armored Defense', -2),
   makeModifier('Attached', -1, '-1 or -2'),
@@ -66,7 +66,7 @@ const flaws: IPowerItem[] = [
   makeModifier('Touch Only', -2),
   makeModifier('Uncontrollable', -1)
 ];
-function makeModifier(name: string, cost: number = 1, options?: string): IPowerItem {
+function makeModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
   const ref = refCounter.current;
   refCounter.current = refCounter.current + 1;
   return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1 };

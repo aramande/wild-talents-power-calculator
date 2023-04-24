@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
 import PowerQualityEditor from './power-quality-editor';
-import useTrigger from '../hooks/useTrigger';
 
 interface AddPowerQualityModalProps {
   show: boolean,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { IPowerItem, IPowerQuality, TCapacity } from '../interfaces/power.interface';
+import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
 import { calculateCost } from '../components/powerquality';
 import { Modifiers } from '../helpers/get-modifiers';
@@ -19,7 +19,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   const [multiplier, setMultiplier] = useState(1);
   const [cost, setCost] = useState(1);
   const [quality, dispatch] = usePowerQuality(props.initialData);
-  const [exampleModifier, setExampleModifierState] = useState<IPowerItem>(Modifiers.extra[0]);
+  const [exampleModifier, setExampleModifierState] = useState<IPowerModifier>(Modifiers.extra[0]);
   
   useEffect(() => {
     props.onChange(quality);
@@ -40,14 +40,14 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   function addModifier(formData: FormData){
     const newMax = quality.modifiers ? Math.max(...quality.modifiers.map(x => x.ref)) : 0
     const ref = Math.max(newMax, quality.modifiers ? quality.modifiers.length : 0);
-    
-    dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, {
+    const modifier: IPowerModifier = {
       ref: ref,
-      name: formData.get('name')?.toString(),
+      name: formData.get('name')?.toString() ?? 'Custom',
       specific: formData.get('specific')?.toString(),
       cost: cost,
       multiplier: multiplier
-    }));
+    }
+    dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
   }
   function setQualityMultiplier(direction: boolean){
     if(direction) dispatch(createAction(PowerQualityActionKind.INC_MULTIPLIER, undefined));

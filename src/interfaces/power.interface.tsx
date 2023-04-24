@@ -1,17 +1,21 @@
 export interface IPowerItem{
   ref: number;
-  name?: string;
+  name: string;
   multiplier: number;
   cost: number;
-  costOptions?: string;
-  specific?: string;
 }
 
 
 export interface IPowerQuality extends IPowerItem{
-  modifiers: IPowerItem[];
+  modifiers: IPowerModifier[];
   capacities: TCapacity[];
   emulatedPower: boolean;
+}
+
+export interface IPowerModifier extends IPowerItem{
+  costOptions?: string;
+  specific?: string;
+  focus?: boolean;
 }
 
 export type TCapacity = 'Mass' | 'Range' | 'Speed' | 'Touch' | 'Self' | 'N/A';

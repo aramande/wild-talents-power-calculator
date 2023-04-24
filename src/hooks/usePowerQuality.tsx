@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from 'react';
-import { IPowerItem, IPowerQuality, TCapacity } from '../interfaces/power.interface';
+import { useReducer } from 'react';
+import { IPowerModifier, IPowerQuality, TCapacity } from '../interfaces/power.interface';
 import { Action } from '../helpers/Reducer';
 
 export enum PowerQualityActionKind {
@@ -48,7 +48,7 @@ type DecrementMultiplierAction = Action<typeof PowerQualityActionKind.DEC_MULTIP
 function reduceDecrementMultiplierAction(state: IPowerQuality, action: DecrementMultiplierAction): IPowerQuality {
   return {...state, multiplier: Math.max(1, state.multiplier - 1)};
 }
-type AddModifierAction = Action<typeof PowerQualityActionKind.ADD_MODIFIER, IPowerItem>;
+type AddModifierAction = Action<typeof PowerQualityActionKind.ADD_MODIFIER, IPowerModifier>;
 function reduceAddModifierAction(state: IPowerQuality, action: AddModifierAction): IPowerQuality {
   if (!action.payload) return state;
   return {...state, modifiers: [...state.modifiers, action.payload]};
