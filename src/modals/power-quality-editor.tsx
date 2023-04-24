@@ -162,14 +162,14 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
         <div className='btnlist'>
           {Modifiers.extra.map(x => (
             <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-              {x.name} ({x.costOptions ? x.costOptions : '+' + x.cost})
+              {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : '+' + x.cost})
             </button>
           ))}
         </div>
         <div className='btnlist'>
           {Modifiers.flaws.map(x => (
             <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-              {x.name} ({x.costOptions ? x.costOptions : x.cost})
+              {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : x.cost})
             </button>
           ))}
         </div>
