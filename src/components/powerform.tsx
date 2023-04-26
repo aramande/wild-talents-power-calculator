@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import PowerQuality, { calculateCost } from './powerquality';
+import PowerQuality from './powerquality';
 import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
 import AddPowerQualityModal from '../modals/add-power-quality.modal';
 import useModal from '../hooks/useModal';
 import EditPowerQualityModal from '../modals/edit-power-quality.modal';
 import { Button } from 'react-bootstrap';
+import QualityHelper from '../helpers/Quality.helper';
 
 interface PowerFormProps {
   name?: string,
@@ -36,7 +37,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     toggleEditQualityModal(true);
   }
   
-  const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + calculateCost(item), 0);
+  const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + QualityHelper.calculateCost(item), 0);
 
   function saveNewQuality(result: IPowerQuality): void {
     setPowerQualities((qualities) => [...qualities, result]);

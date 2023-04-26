@@ -3,8 +3,8 @@ import PowerForm from './components/powerform';
 import InfoBox from './components/infobox';
 import { IPowerItem, IPowerQuality } from './interfaces/power.interface';
 import { PowerListActionKind, usePowerList } from './hooks/usePowerList';
-import { calculateCost } from './components/powerquality';
 import { createAction } from './helpers/Reducer';
+import QualityHelper from './helpers/Quality.helper';
 
 function App() {
   const [info, setInfo] = useState<IPowerItem>();
@@ -22,7 +22,7 @@ function App() {
     setQualities(qualities);
   }
   function calculateTotalCost(qualities: IPowerQuality[]): number{
-    const totalCost = qualities.reduce((total: number, item: IPowerQuality) => total + calculateCost(item), 0);
+    const totalCost = qualities.reduce((total: number, item: IPowerQuality) => total + QualityHelper.calculateCost(item), 0);
     return totalCost;
   }
   return (

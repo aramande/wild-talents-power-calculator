@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
-import { calculateCapacities, calculateCost } from '../components/powerquality';
 import { Modifiers } from '../helpers/get-modifiers';
 import { PowerQualityActionKind, usePowerQuality } from '../hooks/usePowerQuality';
 import { createAction } from '../helpers/Reducer';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import QualityHelper from '../helpers/Quality.helper';
 
 interface PowerQualityEditorProps {
   initialData?: IPowerQuality,
@@ -110,8 +110,8 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
           <button type="button" className='btn btn--transparent btn--small' onClick={() => setQualityMultiplier(true)}><i className="fa-solid fa-plus"></i></button>
         </div>
         <div className='spaceabove--1'><input type='checkbox' id='emulated-power' checked={quality.emulatedPower} onChange={(e) => setEmulatedPower(e.target.checked)} /> <label htmlFor='emulated-power'>Emulated power</label></div>
-        <div className='spaceabove--1'>Standard {quality.emulatedPower ? 'willpower' : 'die'} cost: {calculateCost(quality)}</div>
-        <div className='spaceabove--1'>Capacities: {calculateCapacities(quality).join(', ')}</div>
+        <div className='spaceabove--1'>Standard {quality.emulatedPower ? 'willpower' : 'die'} cost: {QualityHelper.calculateCost(quality)}</div>
+        <div className='spaceabove--1'>Capacities: {QualityHelper.getCapacities(quality).join(', ')}</div>
 
         <form onSubmit={(e) => { addModifier(new FormData(e.currentTarget)); e.preventDefault() }}>
           <table className='form'>
