@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PowerQuality, { calculateCost } from './powerquality';
 import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
 import AddPowerQualityModal from '../modals/add-power-quality.modal';
@@ -7,7 +7,10 @@ import EditPowerQualityModal from '../modals/edit-power-quality.modal';
 import { Button } from 'react-bootstrap';
 
 interface PowerFormProps {
-  showInfo: (info: IPowerItem) => void
+  name?: string,
+  qualities?: IPowerQuality[],
+  showInfo: (info: IPowerItem) => void,
+  onSavePower: (name: string, qualities: IPowerQuality[]) => void
 }
 
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
@@ -16,6 +19,11 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
   const [editQualityModalOpen, toggleEditQualityModal] = useModal();
+
+  useEffect(() => {
+    if(props.name) setName(props.name);
+    if(props.qualities) setPowerQualities(props.qualities);
+  }, [props.name, props.qualities])
 
   function closeAddQualityModal() {
     toggleAddQualityModal(false);
@@ -38,7 +46,11 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setPowerQualities((qualities) => qualities.map(x => x.ref === result.ref ? result : x));
   }
   function savePower(): void{
-    console.log('saving', name, powerQualities);
+    props.onSavePower(name, powerQualities)
+  }
+  function clearPower(): void{
+    setName('Undefined Power');
+    setPowerQualities([]);
   }
 
   return (
@@ -57,12 +69,12 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
       </article>
       <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
       <footer className='powerform__btnfooter'>
-        <Button className='btn--delete'>Clear</Button>
+        <Button className='btn--delete'  onClick={() => clearPower()}>Clear</Button>
         <Button className='btn--primary' onClick={() => savePower()}>Save</Button>
       </footer>
+      
       <AddPowerQualityModal show={addQualityModalOpen} onClose={closeAddQualityModal} onSave={saveNewQuality} />
       <EditPowerQualityModal show={editQualityModalOpen} initialData={editTarget} onClose={closeEditQualityModal} onSave={saveEditedQuality} />
-      
     </section>
   );
 

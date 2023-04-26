@@ -1,3 +1,4 @@
+@use "../abstracts/" as *;
 @use "../tools/screen";
 .app{
   display: grid;
@@ -43,6 +44,14 @@
   }
   &__powerlist{
     grid-area: list;
+    margin-top: space(4);
+  }
+  &__poweritem{
+    cursor: pointer;
+    margin-top: space(1);
+    display: flex;
+    gap: space(4);
+    margin-right: space(4);
   }
   &__footer{
     grid-area: footer;
