@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
-import { calculateCost } from '../components/powerquality';
+import { calculateCapacities, calculateCost } from '../components/powerquality';
 import { Modifiers } from '../helpers/get-modifiers';
 import { PowerQualityActionKind, usePowerQuality } from '../hooks/usePowerQuality';
 import { createAction } from '../helpers/Reducer';
@@ -29,7 +29,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
     dispatch(createAction(PowerQualityActionKind.SET_MAIN_CAPACITY, capacity))
   }
   function updateQuality(qualityName: string){
-    if(isUnavailable(qualityName, quality.capacities[0])){
+    if(isUnavailable(qualityName, quality.capacity)){
       if(qualityName === 'Attack') setCapacity('Mass');
       if(qualityName === 'Defend') setCapacity('Self');
       if(qualityName === 'Useful') setCapacity('Mass');
@@ -111,6 +111,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
         </div>
         <div className='spaceabove--1'><input type='checkbox' id='emulated-power' checked={quality.emulatedPower} onChange={(e) => setEmulatedPower(e.target.checked)} /> <label htmlFor='emulated-power'>Emulated power</label></div>
         <div className='spaceabove--1'>Standard {quality.emulatedPower ? 'willpower' : 'die'} cost: {calculateCost(quality)}</div>
+        <div className='spaceabove--1'>Capacities: {calculateCapacities(quality).join(', ')}</div>
 
         <form onSubmit={(e) => { addModifier(new FormData(e.currentTarget)); e.preventDefault() }}>
           <table className='form'>

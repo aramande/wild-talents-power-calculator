@@ -9,7 +9,6 @@ export interface IPowerItem{
 export interface IPowerQuality extends IPowerItem{
   modifiers: IPowerModifier[];
   capacity: TCapacity;
-  capacities: TCapacity[];
   emulatedPower: boolean;
 }
 

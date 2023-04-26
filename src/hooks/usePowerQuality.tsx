@@ -26,20 +26,10 @@ function reduceSetQualityAction(state: IPowerQuality, action: SetQualityAction):
   if (!action.payload) return state;
   return {...state, name: action.payload};
 }
-type SetCapacityAction = Action<typeof PowerQualityActionKind.SET_CAPACITY, TCapacity>;
-function reduceSetCapacityAction(state: IPowerQuality, action: SetCapacityAction): IPowerQuality {
-  if (!action.payload) return state;
-  return {...state, capacities: [action.payload]};
-}
 type SetMainCapacityAction = Action<typeof PowerQualityActionKind.SET_MAIN_CAPACITY, TCapacity>;
 function reduceSetMainCapacityAction(state: IPowerQuality, action: SetMainCapacityAction): IPowerQuality {
   if (!action.payload) return state;
   return {...state, capacity: action.payload};
-}
-type AddCapacityAction = Action<typeof PowerQualityActionKind.ADD_CAPACITY, TCapacity>;
-function reduceAddCapacityAction(state: IPowerQuality, action: AddCapacityAction): IPowerQuality {
-  if (!action.payload) return state;
-  return {...state, capacities: [...state.capacities, action.payload]};
 }
 type SetEmulatedAction = Action<typeof PowerQualityActionKind.SET_EMULATED, boolean>;
 function reduceSetEmulatedAction(state: IPowerQuality, action: SetEmulatedAction): IPowerQuality {
@@ -68,13 +58,10 @@ function reduceDelModifierAction(state: IPowerQuality, action: DelModifierAction
 export type PowerQualityActions = 
   | SetRefAction 
   | SetQualityAction 
-  | SetCapacityAction 
   | SetMainCapacityAction 
-  | AddCapacityAction 
   | SetEmulatedAction 
   | IncrementMultiplierAction 
   | DecrementMultiplierAction 
-  | SetCapacityAction
   | AddModifierAction
   | DelModifierAction;
 
@@ -84,12 +71,8 @@ function powerQualityReducer(state: IPowerQuality, action: PowerQualityActions):
       return reduceSetQualityAction(state, action);
     case PowerQualityActionKind.SET_REF:
       return reduceSetRefAction(state, action);
-    case PowerQualityActionKind.SET_CAPACITY:
-      return reduceSetCapacityAction(state, action);
     case PowerQualityActionKind.SET_MAIN_CAPACITY:
       return reduceSetMainCapacityAction(state, action);
-    case PowerQualityActionKind.ADD_CAPACITY:
-      return reduceAddCapacityAction(state, action);
     case PowerQualityActionKind.SET_EMULATED:
       return reduceSetEmulatedAction(state, action);
     case PowerQualityActionKind.INC_MULTIPLIER:
@@ -113,7 +96,6 @@ export function usePowerQuality(initialData?: IPowerQuality): [IPowerQuality, Re
     emulatedPower: false,
     name: 'Attack',
     capacity: 'Mass',
-    capacities: [],
     modifiers: []
   };
   const [characters, dispatch] = useReducer(powerQualityReducer, initialData ?? result);
