@@ -16,4 +16,12 @@
     font-size: 1.1rem;
     color: $color-text-accent-light; 
   }
+  &__dice-distribution{
+    display: flex;
+    gap: space(2);
+    input{
+      width: 100px;
+      margin-right: space(2);
+    }
+  }
 }

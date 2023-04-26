@@ -1,5 +1,15 @@
 import { IPowerQuality } from '../interfaces/power.interface';
 
+export interface IState {
+  touchOnly: boolean;
+  selfOnly: boolean;
+  mass: boolean;
+  range: boolean;
+  speed: boolean;
+  touch: boolean;
+  self: boolean;
+}
+
 class QualityHelper{
   static calculateCost = (info: IPowerQuality): number => {
     const powerQualityBaseCost = (info.emulatedPower ? 0 : 2) + Math.max(0, info.cost * (info.multiplier-1));
@@ -8,7 +18,7 @@ class QualityHelper{
   }
   
   static getState = (info: IPowerQuality) => {
-    const state = {
+    const state: IState = {
       touchOnly: false,
       selfOnly: false,
       mass: false,
