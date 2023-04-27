@@ -7,8 +7,9 @@ import useTrigger from '../hooks/useTrigger';
 interface AddPowerQualityModalProps {
   initialData?: IPowerQuality,
   show: boolean,
-  onClose: () => void
-  onSave: (result: IPowerQuality) => void
+  onClose: () => void,
+  onSave: (result: IPowerQuality) => void,
+  onDelete: (ref: string) => void
 }
 
 const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
@@ -17,6 +18,10 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
 
   function onSave(){
     if(result) props.onSave(result); 
+    props.onClose();
+  }
+  function onDelete(){
+    if(result) props.onDelete(result.ref); 
     props.onClose();
   }
 
@@ -35,8 +40,8 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
 
         <Modal.Footer>
           <Button variant="secondary" onClick={() => props.onClose()}>Cancel</Button>
-          <Button variant="secondary" className='btn--delete' onClick={() => props.onClose()}>Delete</Button>
-          <Button variant="primary" className='btn--primary' onClick={() => {onSave()}}>Save</Button>
+          <Button variant="secondary" className='btn--delete' onClick={() => onDelete()}>Delete</Button>
+          <Button variant="primary" className='btn--primary' onClick={() => onSave()}>Save</Button>
         </Modal.Footer>
       </Modal.Dialog>
     </Modal>

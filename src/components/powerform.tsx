@@ -43,6 +43,9 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     result.ref = result.name + Math.trunc(Math.random() * 100000);
     setPowerQualities((qualities) => [...qualities, result]);
   }
+  function deleteQuality(ref: string): void {
+    setPowerQualities((qualities) => qualities.filter(x => x.ref !== ref));
+  }
 
   function saveEditedQuality(result: IPowerQuality): void {
     setPowerQualities((qualities) => qualities.map(x => x.ref === result.ref ? result : x));
@@ -76,7 +79,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
       </footer>
       
       <AddPowerQualityModal show={addQualityModalOpen} onClose={closeAddQualityModal} onSave={saveNewQuality} />
-      <EditPowerQualityModal show={editQualityModalOpen} initialData={editTarget} onClose={closeEditQualityModal} onSave={saveEditedQuality} />
+      <EditPowerQualityModal show={editQualityModalOpen} initialData={editTarget} onClose={closeEditQualityModal} onDelete={deleteQuality} onSave={saveEditedQuality} />
     </section>
   );
 
