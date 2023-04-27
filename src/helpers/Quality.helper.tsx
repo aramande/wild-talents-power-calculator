@@ -8,6 +8,9 @@ export interface IState {
   speed: boolean;
   touch: boolean;
   self: boolean;
+  maxMass: boolean;
+  maxRange: boolean;
+  maxSpeed: boolean;
 }
 
 class QualityHelper{
@@ -25,7 +28,10 @@ class QualityHelper{
       range: false,
       speed: false,
       touch: false,
-      self: false
+      self: false,
+      maxMass: false,
+      maxRange: false,
+      maxSpeed: false
     };
   
     const type = info.capacity.toLowerCase();
@@ -44,7 +50,7 @@ class QualityHelper{
       switch (modifier.name.toLowerCase()) {
         case 'touch only': state.touchOnly = true; break;
         case 'self only': state.selfOnly = true; break;
-        case 'power capacity':
+        case 'power capacity':{
           const type = modifier.specific?.toLowerCase();
           if (type === 'mass')
             state.mass = true;
@@ -55,6 +61,17 @@ class QualityHelper{
           else if (type === 'touch')
             state.touch = true;
           break;
+        }
+        case 'high capacity':{
+          const type = modifier.specific?.toLowerCase();
+          if (type === 'mass')
+            state.maxMass = true;
+          else if (type === 'range')
+            state.maxRange = true;
+          else if (type === 'speed')
+            state.maxSpeed = true;
+          break;
+        }
       }
     }
     return state;

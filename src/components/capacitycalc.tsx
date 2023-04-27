@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { IPowerQuality } from '../interfaces/power.interface';
-import QualityHelper from '../helpers/Quality.helper';
+import QualityHelper, { IState } from '../helpers/Quality.helper';
+import OneCapacity from './CapacityTables/oneCapacity';
+import TwoCapacities from './CapacityTables/twoCapacities';
+import ThreeCapacities from './CapacityTables/threeCapacities';
 
 interface CapacityCalcProps {
   quality: IPowerQuality;
@@ -9,6 +12,34 @@ interface CapacityCalcProps {
 const baseMass = [50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600];
 const baseRange = [10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120];
 const baseSpeed = [2, 5, 10, 20, 40, 80, 160, 320, 640, 1280];
+export type TCapacity = 'Mass'|'Range'|'Speed';
+export class Capacity {
+  private type: TCapacity;
+  private state: IState;
+  private dice: number;
+  
+  constructor(type: TCapacity, state: IState, dice: number) {
+    this.type = type;
+    this.state = state;
+    this.dice = dice;
+  }
+
+  getType(): TCapacity{
+    return this.type;
+  }
+  getValue(): number{
+    if(this.type === 'Mass')  return 50 * Math.pow(2, this.dice-1);
+    if(this.type === 'Range') return 10 * Math.pow(2, this.dice-1);
+    if(this.type === 'Speed') return Math.trunc(2.5 * Math.pow(2, this.dice-1));
+    return 0;
+  }
+  getMeasure(): string{
+    if(this.type === 'Mass') return ' lbs';
+    if(this.type === 'Range') return ' yards';
+    if(this.type === 'Speed') return ' yards';
+    return '';
+  }
+}
 const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
   const [massDice, setMassDice] = useState(1);
   const [rangeDice, setRangeDice] = useState(1);
@@ -22,6 +53,9 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
   const booster = quality.modifiers.find(x => x.name.toLowerCase() === 'booster');
   const boosterCount = booster?.multiplier ? booster.multiplier + 1 : 0;
   
+  const massCapacity = new Capacity('Mass', state, massDice);
+  const rangeCapacity = new Capacity('Range', state, rangeDice);
+  const speedCapacity = new Capacity('Speed', state, speedDice);
   return (
     <>
       <h4>Dice distribution</h4>
@@ -30,102 +64,19 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
         {state.range && <><label htmlFor="RangeDice">Range</label><input min='1' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}
         {state.speed && <><label htmlFor="SpeedDice">Speed</label><input min='1' type='number' id='SpeedDice' value={speedDice} onChange={(e) => setSpeedDice(parseInt(e.target.value))}/></>}
       </div>
-      {(state.mass && !state.range && !state.speed) && oneCapacity(boosterCount, baseMass, 'Mass', massDice, 'lbs')}
-      {(!state.mass && state.range && !state.speed) && oneCapacity(boosterCount, baseRange, 'Range', rangeDice, 'yards')}
-      {(!state.mass && !state.range && state.speed) && oneCapacity(boosterCount, baseSpeed, 'Speed', speedDice, 'yards')}
-      {(!state.mass && state.range && state.speed) && twoCapacities(boosterCount, baseRange, 'Range', rangeDice, 'yards', baseSpeed, 'Speed', speedDice, 'yards')}
-      {(state.mass && !state.range && state.speed) && twoCapacities(boosterCount, baseMass, 'Mass', massDice, 'lbs', baseSpeed, 'Speed', speedDice, 'yards')}
-      {(state.mass && state.range && !state.speed) && twoCapacities(boosterCount, baseMass, 'Mass', massDice, 'lbs', baseRange, 'Range', rangeDice, 'yards')}
-      {(state.mass && state.range && state.speed) && threeCapacities(boosterCount, massDice, rangeDice, speedDice)}
+      {(state.mass && !state.range && !state.speed) && <OneCapacity boosters={boosterCount} capacity={massCapacity} />}
+      {(!state.mass && state.range && !state.speed) && <OneCapacity boosters={boosterCount} capacity={rangeCapacity} />}
+      {(!state.mass && !state.range && state.speed) && <OneCapacity boosters={boosterCount} capacity={speedCapacity} />}
+      {(!state.mass && state.range && state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={rangeCapacity} secondCapacity={speedCapacity}/>}
+      {(state.mass && !state.range && state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={rangeCapacity}/>}
+      {(state.mass && state.range && !state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={speedCapacity}/>}
+      {(state.mass && state.range && state.speed) && <ThreeCapacities boosters={boosterCount} massCapacity={massCapacity} rangeCapacity={rangeCapacity} speedCapacity={speedCapacity} />}
     </>
   );
 };
 
-function oneCapacity(boosters: number, baseValue: number[], type: string, dice: number, measure: string){
-  const header = [];
-  const rows = [];
-  header.push(<tr><th></th><td>{type}</td></tr>);
-  rows.push(<><tr><th>Booster {boosters}</th><td>{baseValue[dice-1] * Math.pow(10, boosters)} {measure}</td></tr></>)
-  
-  return (
-    <>
-      <table className='infobox__capacity-calculator'>
-        <thead>
-          {header}
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
-    </>
-  );
-}
-function twoCapacities(boosters: number, firstBaseValue: number[], firstType: string, firstDice: number, firstMeasure: string, secondBaseValue: number[], secondType: string, secondDice: number, secondMeasure: string ){
-  const header = [];
-  const rows = [];
-  header.push(<tr><th></th><td>{firstType}</td><td>{secondType}</td></tr>);
-  for (let rowIndex = 0; rowIndex < boosters; rowIndex++) {
-    const rowContent = [];
-    for (let colIndex = 0; colIndex < boosters; colIndex++) {
-      if(rowIndex + colIndex > boosters) rowContent.push(<><td></td><td></td></>);
-      else rowContent.push(<></>);
-    }
-    rows.push(<tr><th>Booster {rowIndex}</th>
-      <td className='border-left border-color--primary'>{firstBaseValue[firstDice-1] * Math.pow(10, rowIndex)} {firstMeasure}</td>
-      <td>{secondBaseValue[secondDice-1] * Math.pow(10, boosters - rowIndex - 1)} {secondMeasure}</td>
-    </tr>);
-  }
-  return (
-    <>
-      <table className='infobox__capacity-calculator'>
-        <thead>
-          {header}
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
-    </>
-  );
-}
 
-function threeCapacities(boosters: number, massDice: number, rangeDice: number, speedDice: number ){
-  const headerRow = [];
-  const header = [];
-  const rows = [];
-  for (let index = 0; index < boosters; index++) {
-    headerRow.push(<th colSpan={3}>Booster {index}</th>)
-  }
-  header.push(<tr><th></th>{headerRow}</tr>);
-  const secondaryHeaderRow = [];
-  for (let index = 0; index < boosters; index++) {
-    secondaryHeaderRow.push(<><td>Mass</td><td>Range</td><td>Speed</td></>)
-  }
-  header.push(<tr><th></th>{secondaryHeaderRow}</tr>);
-  for (let rowIndex = 0; rowIndex < boosters; rowIndex++) {
-    const rowContent = [];
-    for (let colIndex = 0; colIndex < boosters; colIndex++) {
-      if(rowIndex + colIndex >= boosters) rowContent.push(<><td></td><td></td><td></td></>);
-      else rowContent.push(<>
-        <td className='border-left border-color--primary'>{baseMass[massDice-1] * Math.pow(10, rowIndex)} lbs</td>
-        <td>{baseRange[rangeDice-1] * Math.pow(10, colIndex)} yards</td>
-        <td>{baseSpeed[speedDice-1] * Math.pow(10, boosters - rowIndex - colIndex - 1)} yards</td>
-      </>);
-    }
-    rows.push(<tr><th>Booster {rowIndex}</th>{rowContent}</tr>);
-  }
-  return (
-    <>
-      <table className='infobox__capacity-calculator'>
-        <thead>
-          {header}
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
-    </>
-  );
-}
+
+
 
 export default CapacityCalc;
