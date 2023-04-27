@@ -1,6 +1,6 @@
 import { IPowerItem, IPowerModifier } from '../interfaces/power.interface';
 
-const refCounter: {current: number} = {current: 0};
+
 const extras: IPowerModifier[] = [
   makeModifier('Area', 1, '+1 per Area die'),
   makeModifier('Augment', 4),
@@ -83,13 +83,11 @@ const flaws: IPowerModifier[] = [
   makeFocusModifier('Unwieldy', -1, '-1 or -2'),
 ];
 function makeModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
-  const ref = refCounter.current;
-  refCounter.current = refCounter.current + 1;
+  const ref = name;
   return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1 };
 }
 function makeFocusModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
-  const ref = refCounter.current;
-  refCounter.current = refCounter.current + 1;
+  const ref = name;
   return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1, focus: true };
 }
 

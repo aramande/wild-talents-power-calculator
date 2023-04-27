@@ -1,5 +1,5 @@
 export interface IPowerItem{
-  ref: number;
+  ref: string;
   name: string;
   multiplier: number;
   cost: number;

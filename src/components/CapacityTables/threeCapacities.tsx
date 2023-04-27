@@ -2,13 +2,14 @@ import React from 'react';
 import { Capacity } from '../capacitycalc';
 
 interface ThreeCapacitiesProps {
+  reduced: number;
   boosters: number; 
   massCapacity: Capacity;
   rangeCapacity: Capacity;
   speedCapacity: Capacity;
 }
 
-const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, massCapacity, rangeCapacity, speedCapacity }) => {
+const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, reduced, massCapacity, rangeCapacity, speedCapacity }) => {
   const headerRow = [];
   const header = [];
   const rows = [];
@@ -24,9 +25,9 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, massCapacit
     for (let colIndex = 0; colIndex < boosters; colIndex++) {
       if(rowIndex + colIndex >= boosters) rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}><td></td><td></td><td></td></React.Fragment>);
       else rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}>
-        <td className='border-left border-color--primary'>{massCapacity.getValue() * Math.pow(10, rowIndex)} {massCapacity.getMeasure()}</td>
-        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex)} {massCapacity.getMeasure()}</td>
-        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex - 1)} {massCapacity.getMeasure()}</td>
+        <td className='border-left border-color--primary'>{massCapacity.getValue() * Math.pow(10, rowIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
+        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
+        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
       </React.Fragment>);
     }
     rows.push(<tr key={'row'+rowIndex}><th>Booster {rowIndex}</th>{rowContent}</tr>);

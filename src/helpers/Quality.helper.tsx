@@ -11,6 +11,7 @@ export interface IState {
   maxMass: boolean;
   maxRange: boolean;
   maxSpeed: boolean;
+  reduced: number;
 }
 
 class QualityHelper{
@@ -31,7 +32,8 @@ class QualityHelper{
       self: false,
       maxMass: false,
       maxRange: false,
-      maxSpeed: false
+      maxSpeed: false,
+      reduced: 0
     };
   
     const type = info.capacity.toLowerCase();
@@ -71,6 +73,9 @@ class QualityHelper{
           else if (type === 'speed')
             state.maxSpeed = true;
           break;
+        }
+        case 'reduced capacities':{
+          state.reduced = modifier.multiplier
         }
       }
     }

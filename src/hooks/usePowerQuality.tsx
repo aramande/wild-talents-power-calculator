@@ -16,7 +16,7 @@ export enum PowerQualityActionKind {
 }
 
 
-type SetRefAction = Action<typeof PowerQualityActionKind.SET_REF, number>;
+type SetRefAction = Action<typeof PowerQualityActionKind.SET_REF, string>;
 function reduceSetRefAction(state: IPowerQuality, action: SetRefAction): IPowerQuality {
   if (!action.payload) return state;
   return {...state, ref: action.payload};
@@ -49,7 +49,7 @@ function reduceAddModifierAction(state: IPowerQuality, action: AddModifierAction
   if (!action.payload) return state;
   return {...state, modifiers: [...state.modifiers, action.payload]};
 }
-type DelModifierAction = Action<typeof PowerQualityActionKind.DEL_MODIFIER, number>;
+type DelModifierAction = Action<typeof PowerQualityActionKind.DEL_MODIFIER, string>;
 function reduceDelModifierAction(state: IPowerQuality, action: DelModifierAction): IPowerQuality {
   if (action.payload === undefined) return state;
   return {...state, modifiers: state.modifiers?.filter(x => x.ref !== action.payload)};
@@ -90,7 +90,7 @@ function powerQualityReducer(state: IPowerQuality, action: PowerQualityActions):
 }
 export function usePowerQuality(initialData?: IPowerQuality): [IPowerQuality, React.Dispatch<PowerQualityActions>] {
   const result: IPowerQuality = {
-    ref: 0,
+    ref: 'x',
     multiplier: 1,
     cost: 1,
     emulatedPower: false,

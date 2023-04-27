@@ -9,9 +9,6 @@ interface CapacityCalcProps {
   quality: IPowerQuality;
 }
 
-const baseMass = [50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600];
-const baseRange = [10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120];
-const baseSpeed = [2, 5, 10, 20, 40, 80, 160, 320, 640, 1280];
 export type TCapacity = 'Mass'|'Range'|'Speed';
 export class Capacity {
   private type: TCapacity;
@@ -28,10 +25,17 @@ export class Capacity {
     return this.type;
   }
   getValue(): number{
+    if(this.dice === 0) return 0;
     if(this.type === 'Mass')  return 50 * Math.pow(2, this.dice-1);
     if(this.type === 'Range') return 10 * Math.pow(2, this.dice-1);
     if(this.type === 'Speed') return Math.trunc(2.5 * Math.pow(2, this.dice-1));
     return 0;
+  }
+  isMaxed(): boolean{
+    if(this.type === 'Mass') return this.state.maxMass;
+    if(this.type === 'Range') return this.state.maxRange;
+    if(this.type === 'Speed') return this.state.maxSpeed;
+    return false;
   }
   getMeasure(): string{
     if(this.type === 'Mass') return ' lbs';
@@ -51,26 +55,49 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
   }
 
   const booster = quality.modifiers.find(x => x.name.toLowerCase() === 'booster');
-  const boosterCount = booster?.multiplier ? booster.multiplier + 1 : 0;
+  const boosterCount = booster?.multiplier ? booster.multiplier : 0;
   
   const massCapacity = new Capacity('Mass', state, massDice);
   const rangeCapacity = new Capacity('Range', state, rangeDice);
   const speedCapacity = new Capacity('Speed', state, speedDice);
+
+  function isOnlyMass(): boolean{
+    return state.mass && !state.maxMass && (!state.range || state.maxRange) && (!state.speed || state.maxSpeed);
+  }
+  function isOnlyRange(): boolean{
+    return (!state.mass || state.maxMass) && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+  }
+  function isOnlySpeed(): boolean{
+    return (!state.mass || state.maxMass) && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+  }
+  function isRangeAndSpeed(): boolean{
+    return (!state.mass || state.maxMass) && state.range && !state.maxRange && state.speed && !state.maxSpeed;
+  }
+  function isMassAndRange(): boolean{
+    return state.mass && !state.maxMass && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+  }
+  function isMassAndSpeed(): boolean{
+    return state.mass && !state.maxMass && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+  }
+  function isAll(): boolean{
+    return state.mass && !state.maxMass && state.range && !state.maxRange && state.speed && !state.maxRange;
+  }
+
   return (
     <>
       <h4>Dice distribution</h4>
       <div className='infobox__dice-distribution'>
-        {state.mass && <><label htmlFor="MassDice">Mass</label><input min='1' type='number' id='MassDice' value={massDice} onChange={(e) => setMassDice(parseInt(e.target.value))}/></>}
-        {state.range && <><label htmlFor="RangeDice">Range</label><input min='1' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}
-        {state.speed && <><label htmlFor="SpeedDice">Speed</label><input min='1' type='number' id='SpeedDice' value={speedDice} onChange={(e) => setSpeedDice(parseInt(e.target.value))}/></>}
+        {state.mass && <><label htmlFor="MassDice">Mass</label><input min='0' type='number' id='MassDice' value={massDice} onChange={(e) => setMassDice(parseInt(e.target.value))}/></>}
+        {state.range && <><label htmlFor="RangeDice">Range</label><input min='0' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}
+        {state.speed && <><label htmlFor="SpeedDice">Speed</label><input min='0' type='number' id='SpeedDice' value={speedDice} onChange={(e) => setSpeedDice(parseInt(e.target.value))}/></>}
       </div>
-      {(state.mass && !state.range && !state.speed) && <OneCapacity boosters={boosterCount} capacity={massCapacity} />}
-      {(!state.mass && state.range && !state.speed) && <OneCapacity boosters={boosterCount} capacity={rangeCapacity} />}
-      {(!state.mass && !state.range && state.speed) && <OneCapacity boosters={boosterCount} capacity={speedCapacity} />}
-      {(!state.mass && state.range && state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={rangeCapacity} secondCapacity={speedCapacity}/>}
-      {(state.mass && !state.range && state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={rangeCapacity}/>}
-      {(state.mass && state.range && !state.speed) && <TwoCapacities boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={speedCapacity}/>}
-      {(state.mass && state.range && state.speed) && <ThreeCapacities boosters={boosterCount} massCapacity={massCapacity} rangeCapacity={rangeCapacity} speedCapacity={speedCapacity} />}
+      {isOnlyMass() && <OneCapacity reduced={state.reduced} boosters={boosterCount} capacity={massCapacity} offCapacity={rangeCapacity} offCapacity2={speedCapacity} />}
+      {isOnlyRange() && <OneCapacity reduced={state.reduced} boosters={boosterCount} capacity={rangeCapacity} offCapacity={massCapacity} offCapacity2={speedCapacity} />}
+      {isOnlySpeed() && <OneCapacity reduced={state.reduced} boosters={boosterCount} capacity={speedCapacity} offCapacity={rangeCapacity} offCapacity2={massCapacity} />}
+      {isRangeAndSpeed() && <TwoCapacities reduced={state.reduced} boosters={boosterCount} firstCapacity={rangeCapacity} secondCapacity={speedCapacity} offCapacity={massCapacity} />}
+      {isMassAndSpeed() && <TwoCapacities reduced={state.reduced} boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={speedCapacity} offCapacity={rangeCapacity} />}
+      {isMassAndRange() && <TwoCapacities reduced={state.reduced} boosters={boosterCount} firstCapacity={massCapacity} secondCapacity={rangeCapacity} offCapacity={speedCapacity} />}
+      {isAll() && <ThreeCapacities reduced={state.reduced} boosters={boosterCount} massCapacity={massCapacity} rangeCapacity={rangeCapacity} speedCapacity={speedCapacity} />}
     </>
   );
 };

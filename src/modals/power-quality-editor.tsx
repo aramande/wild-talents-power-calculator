@@ -36,13 +36,14 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
     }
     dispatch(createAction(PowerQualityActionKind.SET_NAME, qualityName));
   }
-  function addModifier(formData: FormData){
-    const newMax = quality.modifiers ? Math.max(...quality.modifiers.map(x => x.ref)) : 0
-    const ref = Math.max(newMax, quality.modifiers ? quality.modifiers.length : 0);
+  function addModifier(formData: FormData){ 
+    const name = formData.get('name')?.toString() ?? 'Custom';
+    const specific = formData.get('specific')?.toString();
+    const ref = name + specific
     const modifier: IPowerModifier = {
       ref: ref,
-      name: formData.get('name')?.toString() ?? 'Custom',
-      specific: formData.get('specific')?.toString(),
+      name: name,
+      specific: specific,
       cost: cost,
       multiplier: multiplier
     }
@@ -52,7 +53,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
     if(direction) dispatch(createAction(PowerQualityActionKind.INC_MULTIPLIER, undefined));
     else          dispatch(createAction(PowerQualityActionKind.DEC_MULTIPLIER, undefined));
   }
-  function removeModifier(ref: number): void {
+  function removeModifier(ref: string): void {
     dispatch(createAction(PowerQualityActionKind.DEL_MODIFIER, ref))
   }
   function setExampleModifier(modifier: IPowerItem){
