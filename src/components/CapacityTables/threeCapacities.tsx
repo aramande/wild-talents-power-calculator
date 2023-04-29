@@ -26,8 +26,8 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, reduced, ma
       if(rowIndex + colIndex >= boosters) rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}><td></td><td></td><td></td></React.Fragment>);
       else rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}>
         <td className='border-left border-color--primary'>{massCapacity.getValue() * Math.pow(10, rowIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
-        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
-        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
+        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {rangeCapacity.getMeasure()}</td>
+        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)} {speedCapacity.getMeasure()}</td>
       </React.Fragment>);
     }
     rows.push(<tr key={'row'+rowIndex}><th>Booster {rowIndex}</th>{rowContent}</tr>);
