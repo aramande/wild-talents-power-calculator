@@ -305,7 +305,7 @@ const lookup: {[key: string]: string[]} = {
   durable: [
     'The focus has twice the normal number of wound boxes (two per die).'
   ],
-  'environmental-bound': [
+  'environment-bound': [
     'The focus functions only in a specific environment, such as the presence of air or only underwater.'
   ],
   'friends only': [
