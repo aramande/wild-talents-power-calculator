@@ -5,17 +5,27 @@ import { IPowerItem, IPowerQuality } from './interfaces/power.interface';
 import { PowerListActionKind, usePowerList } from './hooks/usePowerList';
 import { createAction } from './helpers/Reducer';
 import QualityHelper from './helpers/Quality.helper';
+import ConfirmModal from './modals/confirm.modal';
 
 function App() {
   const [info, setInfo] = useState<IPowerItem>();
+  const [powerToRemove, setPowerToRemove] = useState<string>();
   const [savedPowers, setSavedPower] = usePowerList();
   const [name, setName] = useState<string | undefined>(undefined);
   const [qualities, setQualities] = useState<IPowerQuality[] | undefined>(undefined);
+
   function savePower(name: string, qualities: IPowerQuality[]): void {
     setSavedPower(createAction(PowerListActionKind.UPDATE_POWER, {name: name, qualities: qualities}));
   }
   function removePower(name: string): void{
-    setSavedPower(createAction(PowerListActionKind.DEL_POWER, name));
+    setPowerToRemove(name);
+  }
+  function confirmRemovePower(): void{
+    setSavedPower(createAction(PowerListActionKind.DEL_POWER, powerToRemove));
+    cancelRemovePower();
+  }
+  function cancelRemovePower(): void{
+    setPowerToRemove(undefined)
   }
   function loadPower(name: string, qualities: IPowerQuality[]): void{
     setName(name);
@@ -41,6 +51,9 @@ function App() {
         )})}
       </section>
       <footer className="app__footer"></footer>
+      <ConfirmModal show={powerToRemove !== undefined} onConfirm={() => confirmRemovePower()} confirmButton='Delete'
+        message={'Are you sure you want to remove ' + (powerToRemove ?? '')} 
+        onCancel={() => cancelRemovePower()} header='Deleting power'  />
     </div>
   );
 }
