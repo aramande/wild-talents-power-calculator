@@ -17,6 +17,7 @@ const refCounter: {current: number} = {current: 0};
 const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQualityEditorProps) => {
   const [description, setDescription] = useState<string[]>([]);
   const [multiplier, setMultiplier] = useState(1);
+  const [specific, setSpecific] = useState<string>('');
   const [cost, setCost] = useState(1);
   const [quality, dispatch] = usePowerQuality(props.initialData);
   const [exampleModifier, setExampleModifierState] = useState<IPowerModifier>(Modifiers.extra[0]);
@@ -40,7 +41,6 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   }
   function addModifier(formData: FormData){ 
     const name = formData.get('name')?.toString() ?? 'Custom';
-    const specific = formData.get('specific')?.toString();
     const ref = name + specific
     const modifier: IPowerModifier = {
       ref: ref,
@@ -49,6 +49,8 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
       cost: cost,
       multiplier: multiplier
     }
+    setMultiplier(1);
+    setSpecific('');
     dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
   }
   function setQualityMultiplier(direction: boolean){
@@ -131,7 +133,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
               </tr>
               <tr>
                 <th className='form__label'>Note</th>
-                <td className='form__value'><input type="text" name='specific' /></td>
+                <td className='form__value'><input type="text" name='specific' value={specific} onChange={(e) => setSpecific(e.target.value)} /></td>
               </tr>
               <tr>
                 <th className='form__label'>Cost</th>
