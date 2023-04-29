@@ -13,8 +13,13 @@
   overflow-x: hidden;
 
   @include screen.larger-than(md){
-    grid-template-columns: 255px 400px;
+    grid-template-columns: 255px minmax(400px, 1fr);
     grid-template-rows: 2fr 1fr;
+    overflow-y: hidden;
+  }
+  @include screen.larger-than(lg){
+    grid-template-columns: 255px 400px 1fr;
+    grid-template-rows: 1fr;
     overflow-y: hidden;
   }
   &__creation{
@@ -37,16 +42,46 @@
       grid-row-start: 2;
       grid-column-start: 2;
     }
+    @include screen.larger-than(lg){
+      grid-row-start: 1;
+      grid-column-start: 3;
+    }
   }
 
-  &__examples{
+  &__pair{
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: space(2);
-    height: 100%;
+    grid-template-columns: 1fr 1fr;
+  }
+  &__scrollarea{
     overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 0.25rem;
   }
+  &__examples{
+    display: grid;
+    gap: space(2);
+    grid-template-rows: 40px auto 20px;
+    
+    @include screen.larger-than(md){
+      max-height: 50vh;
+    }
+    @include screen.larger-than(lg){
+      max-height: calc(100vh - 200px);
+    }
+  }
+  // &__examples{
+  //   display: grid;
+  //   gap: space(2);
+  //   height: 100%;
+
+  //   grid-template-columns: 1fr 1fr;
+  //   grid-template-rows: 40px minmax(10px, 1fr) 20px;
+  //   .btnlist{
+  //     overflow-y: auto;
+  //     border-radius: 0.25rem;
+  //   }
+  // }
   &__modifier{
     // flex flex--gap1 relative
     display: flex;

@@ -160,20 +160,27 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
         </div>
       </div>
       <aside className='powerquality-modal__examples'>
-        <div className='btnlist'>
-          {Modifiers.extra.map(x => (
-            <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-              {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : '+' + x.cost})
-            </button>
-          ))}
+        <div className='powerquality-modal__pair'>
+          <h3>Extras</h3>
+          <h3>Flaws</h3>
         </div>
-        <div className='btnlist'>
-          {Modifiers.flaws.map(x => (
-            <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-              {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : x.cost})
-            </button>
-          ))}
+        <div className='powerquality-modal__pair powerquality-modal__scrollarea'>
+          <div className='btnlist'>
+            {Modifiers.extra.map(x => (
+              <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
+                {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : '+' + x.cost})
+              </button>
+            ))}
+          </div>
+          <div className='btnlist'>
+            {Modifiers.flaws.map(x => (
+              <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
+                {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : x.cost})
+              </button>
+            ))}
+          </div>
         </div>
+        <small><sup>F</sup> Applicable for Focuses</small>
       </aside>
       <div className='powerquality-modal__description'>
         {description.map((x, i) => (<ReactMarkdown key={i}>{x}</ReactMarkdown>))}
