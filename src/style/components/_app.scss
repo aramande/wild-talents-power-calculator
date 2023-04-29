@@ -1,47 +1,70 @@
 @use "../abstracts/" as *;
 @use "../tools/screen";
-.app{
-  display: grid;
-  width: 100vw;
-  height: 100vh;
-  grid-template-rows: 10px min-content min-content min-content 10px;
-  grid-template-columns: 360px 1fr;
+body{
   overflow-x: auto;
   overflow-y: auto;
-  margin: space(4);
+  @include screen.larger-than(sm){
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+}
+.app{
+  display: grid;
+  width: calc(100vw - 15px);
+  grid-template-rows: 10px min-content min-content min-content 10px;
+  padding: space(4);
   gap: space(4);
 
+  grid-template-columns: 1fr;
   grid-template-areas: 
-    "header header"
-    "form list"
-    "info info"
-    "footer footer";
+    "header"
+    "form"
+    "info"
+    "list"
+    "footer";
+
+  
+  @include screen.larger-than(sm){
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    grid-template-rows: 10px minmax(10px, 1fr) minmax(10px, 1fr)  10px;
+    grid-template-columns: 360px minmax(10px, 1fr);
+    grid-template-areas: 
+      "header header"
+      "form list"
+      "info info"
+      "footer footer";
+  }
 
   @include screen.larger-than(md){
-    height: 100vh;
-    grid-template-columns: 360px 1fr;
-    grid-template-rows: 10px 1fr 1fr 10px;
+    grid-template-columns: 360px minmax(10px, 1fr);
+    grid-template-rows: 10px minmax(10px, 2fr) minmax(10px, 1fr) 10px;
     grid-template-areas: 
       "header header"
       "form info"
       "form list"
       "footer footer";
     overflow-x: hidden;
+    overflow-y: hidden;
   }
   @include screen.larger-than(lg){
-    grid-template-columns: 360px 1fr 1fr;
-    grid-template-rows: 10px 1fr 10px;
+    grid-template-columns: 360px minmax(10px, 1fr) 360px;
+    grid-template-rows: 10px minmax(10px, 1fr) 10px;
     grid-template-areas: 
       "header header header"
       "form info list"
       "footer footer footer";
     overflow-x: hidden;
+    overflow-y: hidden;
   }
   &__header{
     grid-area: header;
   }
   &__form{
     grid-area: form;
+    max-width: 360px;
   }
   &__info{
     grid-area: info;

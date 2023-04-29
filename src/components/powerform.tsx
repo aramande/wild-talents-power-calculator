@@ -72,7 +72,9 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
           </div>
         ))}
       </article>
-      <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+      <div>
+        <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+      </div>
       <footer className='powerform__btnfooter'>
         <Button className='btn--delete'  onClick={() => clearPower()}>Clear</Button>
         <Button className='btn--primary' onClick={() => savePower()}>Save</Button>
