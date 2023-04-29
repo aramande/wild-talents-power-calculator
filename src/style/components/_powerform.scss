@@ -1,7 +1,6 @@
 @use '../abstracts/' as *;
 
 .powerform{
-  padding: space(4);
   &__dicecost{
     margin-top: -1 * space(4);
   }

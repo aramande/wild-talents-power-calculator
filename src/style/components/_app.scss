@@ -3,15 +3,19 @@
 .app{
   display: grid;
   width: 100vw;
+  height: 100vh;
   grid-template-rows: 10px min-content min-content min-content 10px;
+  grid-template-columns: 360px 1fr;
   overflow-x: auto;
+  overflow-y: auto;
+  margin: space(4);
+  gap: space(4);
 
   grid-template-areas: 
-    "header"
-    "form"
-    "info"
-    "list"
-    "footer";
+    "header header"
+    "form list"
+    "info info"
+    "footer footer";
 
   @include screen.larger-than(md){
     height: 100vh;
@@ -44,13 +48,12 @@
   }
   &__powerlist{
     grid-area: list;
-    margin-top: space(4);
   }
   &__poweritem{
     cursor: pointer;
-    margin-top: space(1);
     display: flex;
     gap: space(4);
+    margin-top: space(1);
     margin-right: space(4);
   }
   &__footer{

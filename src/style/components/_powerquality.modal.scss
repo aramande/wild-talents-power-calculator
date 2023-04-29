@@ -5,22 +5,36 @@
   display: grid;
   gap: space(2);
   max-height: calc(95vh - 120px);
+  width: 90vw;
   padding: space(3);
-  grid-template-columns: 90vw;
+  grid-template-columns: 1fr;
   grid-auto-rows: max-content;
   overflow-y: auto;
   overflow-x: hidden;
 
   @include screen.larger-than(md){
     grid-template-columns: 255px 400px;
-    grid-template-rows: 400px 300px;
+    grid-template-rows: 2fr 1fr;
     overflow-y: hidden;
+  }
+  &__creation{
+    overflow-y: hidden;
+    overflow-x: hidden;
+    grid-row: 1/span 1;
+    @include screen.larger-than(md){
+      overflow-y: auto;
+      grid-row: 1/span 2;
+    }
+    input[type=text], input[type=number]{
+      width: 185px;
+    }
   }
   
   &__description{
-    overflow-y: auto;
     height: 100%;
     @include screen.larger-than(md){
+      overflow-y: auto;
+      grid-row-start: 2;
       grid-column-start: 2;
     }
   }
@@ -39,5 +53,6 @@
     gap: 1;
     position: relative;
     padding-right: 25px;
+    max-width: 300px;
   }
 }
