@@ -33,4 +33,11 @@
     overflow-y: auto;
     border-radius: 0.25rem;
   }
+  &__modifier{
+    // flex flex--gap1 relative
+    display: flex;
+    gap: 1;
+    position: relative;
+    padding-right: 25px;
+  }
 }

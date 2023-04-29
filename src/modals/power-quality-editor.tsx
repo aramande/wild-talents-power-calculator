@@ -148,7 +148,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
 
         <div className='spaceabove--2'>
           {quality.modifiers.sort(sortModifiers).map(modifier => (
-            <div key={modifier.ref} className='flex flex--gap1 relative'>
+            <div key={modifier.ref} className='powerquality-modal__modifier'>
               <strong>{modifier.multiplier > 1 ? `+${modifier.multiplier} ` : ''}{modifier.name}</strong>
               {modifier.specific && (<span>({modifier.specific})</span>)}
               <small>{`(${modifier.cost * modifier.multiplier})`}</small>
