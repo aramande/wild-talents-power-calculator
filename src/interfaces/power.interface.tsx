@@ -1,6 +1,7 @@
 export interface IPowerItem{
   ref: string;
   name: string;
+  specific?: string;
   multiplier: number;
   cost: number;
 }
@@ -14,7 +15,6 @@ export interface IPowerQuality extends IPowerItem{
 
 export interface IPowerModifier extends IPowerItem{
   costOptions?: string;
-  specific?: string;
   focus?: boolean;
 }
 

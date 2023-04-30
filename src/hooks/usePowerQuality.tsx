@@ -5,6 +5,7 @@ import { Action } from '../helpers/Reducer';
 export enum PowerQualityActionKind {
   SET_REF = 'set-ref',
   SET_NAME = 'set-name',
+  SET_SPECIFIC = 'set-specific',
   SET_CAPACITY = 'set-capacity',
   SET_MAIN_CAPACITY = 'set-main-capacity',
   ADD_CAPACITY = 'add-capacity',
@@ -18,13 +19,18 @@ export enum PowerQualityActionKind {
 
 type SetRefAction = Action<typeof PowerQualityActionKind.SET_REF, string>;
 function reduceSetRefAction(state: IPowerQuality, action: SetRefAction): IPowerQuality {
-  if (!action.payload) return state;
+  if (action.payload === undefined) return state;
   return {...state, ref: action.payload};
 }
 type SetQualityAction = Action<typeof PowerQualityActionKind.SET_NAME, string>;
 function reduceSetQualityAction(state: IPowerQuality, action: SetQualityAction): IPowerQuality {
-  if (!action.payload) return state;
+  if (action.payload === undefined) return state;
   return {...state, name: action.payload};
+}
+type SetSpecificAction = Action<typeof PowerQualityActionKind.SET_SPECIFIC, string>;
+function reduceSetSpecificAction(state: IPowerQuality, action: SetSpecificAction): IPowerQuality {
+  if (action.payload === undefined) return state;
+  return {...state, specific: action.payload};
 }
 type SetMainCapacityAction = Action<typeof PowerQualityActionKind.SET_MAIN_CAPACITY, TCapacity>;
 function reduceSetMainCapacityAction(state: IPowerQuality, action: SetMainCapacityAction): IPowerQuality {
@@ -58,6 +64,7 @@ function reduceDelModifierAction(state: IPowerQuality, action: DelModifierAction
 export type PowerQualityActions = 
   | SetRefAction 
   | SetQualityAction 
+  | SetSpecificAction 
   | SetMainCapacityAction 
   | SetEmulatedAction 
   | IncrementMultiplierAction 
@@ -69,6 +76,8 @@ function powerQualityReducer(state: IPowerQuality, action: PowerQualityActions):
   switch (action.type) {
     case PowerQualityActionKind.SET_NAME:
       return reduceSetQualityAction(state, action);
+    case PowerQualityActionKind.SET_SPECIFIC:
+      return reduceSetSpecificAction(state, action);
     case PowerQualityActionKind.SET_REF:
       return reduceSetRefAction(state, action);
     case PowerQualityActionKind.SET_MAIN_CAPACITY:
@@ -95,6 +104,7 @@ export function usePowerQuality(initialData?: IPowerQuality): [IPowerQuality, Re
     cost: 1,
     emulatedPower: false,
     name: 'Attack',
+    specific: '',
     capacity: 'Mass',
     modifiers: []
   };

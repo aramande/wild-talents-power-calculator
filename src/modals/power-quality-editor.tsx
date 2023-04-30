@@ -57,6 +57,9 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
     if(direction) dispatch(createAction(PowerQualityActionKind.INC_MULTIPLIER, undefined));
     else          dispatch(createAction(PowerQualityActionKind.DEC_MULTIPLIER, undefined));
   }
+  function setQualitySpecific(specific: string){
+    dispatch(createAction(PowerQualityActionKind.SET_SPECIFIC, specific));
+  }
   function removeModifier(ref: string): void {
     dispatch(createAction(PowerQualityActionKind.DEL_MODIFIER, ref))
   }
@@ -119,6 +122,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
             {quality.multiplier}
           <button type="button" className='btn btn--transparent btn--small' onClick={() => setQualityMultiplier(true)}><i className="fa-solid fa-plus"></i></button>
         </div>
+        <div className='spaceabove--1'><label htmlFor='quality-specific'>Note</label> <input type='text' id='quality-specific' value={quality.specific} onChange={(e) => setQualitySpecific(e.target.value)} /></div>
         <div className='spaceabove--1'><input type='checkbox' id='emulated-power' checked={quality.emulatedPower} onChange={(e) => setEmulatedPower(e.target.checked)} /> <label htmlFor='emulated-power'>Emulated power</label></div>
         <div className='spaceabove--1'>Standard {quality.emulatedPower ? 'willpower' : 'die'} cost: {QualityHelper.calculateCost(quality)}</div>
         <div className='spaceabove--1'>Capacities: {QualityHelper.getCapacities(quality).join(', ')}</div>

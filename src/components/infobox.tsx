@@ -12,7 +12,6 @@ interface InfoBoxProps {
 const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
   if(!info) return <></>;
   const description = getDescription(info.name);
-  const modifier = info as IPowerModifier;
   const quality = info as IPowerQuality;
   if(quality){
     
@@ -20,7 +19,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
   return (
     <div className='infobox'>
       <h1 className='infobox__name'>{info.name}</h1>
-      {modifier.specific && (<span className='infobox__specific'>{modifier.specific}</span>)}
+      {info.specific && (<span className='infobox__specific'>{info.specific}</span>)}
       <div className='infobox__scrollbox'>
         <div>
           {quality.modifiers && <CapacityCalc quality={quality}/>}
