@@ -1,12 +1,19 @@
 @use '../abstracts/' as *;
 
 .powerform{
-  padding: space(4);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content min-content minmax(10px, 1fr) min-content min-content;
+  max-height: 100%;
+
+
   &__dicecost{
     margin-top: -1 * space(4);
   }
   &__qualitylist{
     margin-top: space(2);
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   &__add{
     margin-top: space(2);

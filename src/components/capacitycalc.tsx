@@ -85,7 +85,7 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
 
   return (
     <>
-      <h4>Dice distribution</h4>
+      <h4>Capacity Calculator</h4>
       <div className='infobox__dice-distribution'>
         {state.mass && <><label htmlFor="MassDice">Mass</label><input min='0' type='number' id='MassDice' value={massDice} onChange={(e) => setMassDice(parseInt(e.target.value))}/></>}
         {state.range && <><label htmlFor="RangeDice">Range</label><input min='0' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}

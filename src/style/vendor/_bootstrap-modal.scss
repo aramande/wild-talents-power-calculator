@@ -41,6 +41,7 @@
     background: $neutral-300;
     display: flex;
     justify-content: space-between;
+    gap: space(2);
     padding: $modal-padding;
     border-radius: 0 0 $border-radius-card $border-radius-card;
   }

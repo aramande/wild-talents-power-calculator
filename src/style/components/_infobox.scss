@@ -3,12 +3,19 @@
 .infobox{
   display: flex;
   flex-direction: column;
+  overflow-x: auto;
+  overflow-y: hidden;
   min-height: 0;
   height: 100%;
-  padding: space(4);
+  // padding: space(4);
+  &__name{
+    margin-top: 0px;
+    padding-top: 0px;
+  }
   &__scrollbox{
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
+    padding: space(1);
   }
   &__specific{
     margin-top: -10px;
@@ -19,9 +26,17 @@
   &__dice-distribution{
     display: flex;
     gap: space(2);
+    margin-bottom: space(2);
     input{
       width: 100px;
       margin-right: space(2);
+    }
+  }
+  &__capacity-calculator{
+    border-collapse: collapse;
+    td, th{
+      padding: space(1);
+      border-bottom: 1px solid $border-color-primary;
     }
   }
 }

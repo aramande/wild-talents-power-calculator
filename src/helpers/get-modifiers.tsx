@@ -1,4 +1,4 @@
-import { IPowerItem, IPowerModifier } from '../interfaces/power.interface';
+import { IPowerModifier } from '../interfaces/power.interface';
 
 
 const extras: IPowerModifier[] = [
@@ -44,7 +44,7 @@ const extras: IPowerModifier[] = [
   
 const flaws: IPowerModifier[] = [
   makeFocusModifier('Accessible', -1),
-  makeFocusModifier('Adaption', -2),
+  makeFocusModifier('Adaptation', -2),
   makeModifier('Always On', -1),
   makeModifier('Armored Defense', -2),
   makeModifier('Attached', -1, '-1 or -2'),

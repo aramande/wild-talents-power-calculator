@@ -40,7 +40,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + QualityHelper.calculateCost(item), 0);
 
   function saveNewQuality(result: IPowerQuality): void {
-    result.ref = result.name + Math.trunc(Math.random() * 100000);
+    result.ref = result.name + (result.specific ?? Math.trunc(Math.random() * 100000));
     setPowerQualities((qualities) => [...qualities, result]);
   }
   function deleteQuality(ref: string): void {
@@ -72,7 +72,9 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
           </div>
         ))}
       </article>
-      <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+      <div>
+        <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+      </div>
       <footer className='powerform__btnfooter'>
         <Button className='btn--delete'  onClick={() => clearPower()}>Clear</Button>
         <Button className='btn--primary' onClick={() => savePower()}>Save</Button>

@@ -15,8 +15,8 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, reduced, ma
   const rows = [];
   const secondaryHeaderRow = [];
   for (let index = 0; index < boosters; index++) {
-    headerRow.push(<th key={'headerItem'+index} colSpan={3}>Booster {index}</th>);
-    secondaryHeaderRow.push(<React.Fragment key={index}><td>Mass</td><td>Range</td><td>Speed</td></React.Fragment>);
+    headerRow.push(<th key={'headerItem'+index} colSpan={3} className='border-left border-color--primary'>Booster {index}</th>);
+    secondaryHeaderRow.push(<React.Fragment key={index}><td className='border-left border-color--primary'>Mass</td><td>Range</td><td>Speed</td></React.Fragment>);
   }
   header.push(<tr key='mainHeaderRow'><th></th>{headerRow}</tr>);
   header.push(<tr key='secondaryHeaderRow'><th></th>{secondaryHeaderRow}</tr>);
@@ -26,8 +26,8 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({ boosters, reduced, ma
       if(rowIndex + colIndex >= boosters) rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}><td></td><td></td><td></td></React.Fragment>);
       else rowContent.push(<React.Fragment key={rowIndex + 'x' + colIndex}>
         <td className='border-left border-color--primary'>{massCapacity.getValue() * Math.pow(10, rowIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
-        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
-        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}</td>
+        <td>{rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {rangeCapacity.getMeasure()}</td>
+        <td>{speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)} {speedCapacity.getMeasure()}</td>
       </React.Fragment>);
     }
     rows.push(<tr key={'row'+rowIndex}><th>Booster {rowIndex}</th>{rowContent}</tr>);
