@@ -18,7 +18,7 @@
     overflow-y: hidden;
   }
   @include screen.larger-than(lg){
-    grid-template-columns: 255px 400px 1fr;
+    grid-template-columns: 255px 500px 1fr;
     grid-template-rows: 1fr;
     overflow-y: hidden;
   }
@@ -51,7 +51,10 @@
   &__pair{
     display: grid;
     gap: space(2);
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    @include screen.larger-than(sm){
+      grid-template-columns: 1fr 1fr;
+    }
   }
   &__scrollarea{
     overflow-y: auto;
@@ -61,10 +64,17 @@
   &__examples{
     display: grid;
     gap: space(2);
-    grid-template-rows: 30px 20px auto 20px;
+    grid-template-rows: 60px auto 20px;
+    @include screen.larger-than(sm){
+      grid-template-rows: 30px auto 20px;
+    }
     h3{
       margin: 0;
       padding: 0;
+      padding-top: space(3);
+    }
+    input[type=text], input[type=number]{
+      width: 185px;
     }
     @include screen.larger-than(md){
       max-height: 50vh;
@@ -73,18 +83,35 @@
       max-height: calc(100vh - 200px);
     }
   }
-  // &__examples{
-  //   display: grid;
-  //   gap: space(2);
-  //   height: 100%;
-
-  //   grid-template-columns: 1fr 1fr;
-  //   grid-template-rows: 40px minmax(10px, 1fr) 20px;
-  //   .btnlist{
-  //     overflow-y: auto;
-  //     border-radius: 0.25rem;
-  //   }
-  // }
+  
+  &__extras{
+    position: relative;
+    &::before{
+      content: 'Extras';
+      position: sticky;
+      top:0;
+      background-color: $neutral-200;
+      font-size: $font-size-600;
+      color: $color-text-heading;
+      font-weight: $font-weight-heading;
+      font-family: $font-family-heading;
+      padding-bottom: space(1);
+    }
+  }
+  &__flaws{
+    position: relative;
+    &::before{
+      content: 'Flaws';
+      position: sticky;
+      top:0;
+      background-color: $neutral-200;
+      font-size: $font-size-600;
+      color: $color-text-heading;
+      font-weight: $font-weight-heading;
+      font-family: $font-family-heading;
+      padding-bottom: space(1);
+    }
+  }
   &__modifier{
     // flex flex--gap1 relative
     display: flex;
