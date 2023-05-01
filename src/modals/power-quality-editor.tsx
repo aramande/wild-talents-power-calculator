@@ -13,7 +13,6 @@ interface PowerQualityEditorProps {
   onChange: React.Dispatch<React.SetStateAction<IPowerQuality>>
 }
 
-const refCounter: {current: number} = {current: 0};
 const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQualityEditorProps) => {
   const [description, setDescription] = useState<string[]>([]);
   const [multiplier, setMultiplier] = useState(1);
@@ -22,7 +21,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   const [quality, dispatch] = usePowerQuality(props.initialData);
   const [exampleModifier, setExampleModifierState] = useState<IPowerModifier>(Modifiers.extra[0]);
   const [filter, setFilter] = useState<string>('');
-  const [focusFilter, setFocusFilter] = useState<boolean>();
+  const [focusFilter, setFocusFilter] = useState<boolean>(false);
   
   useEffect(() => {
     props.onChange(quality);
@@ -42,16 +41,22 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
   function addModifier(formData: FormData){ 
     const name = formData.get('name')?.toString() ?? 'Custom';
     const ref = name + specific
-    const modifier: IPowerModifier = {
-      ref: ref,
-      name: name,
-      specific: specific,
-      cost: cost,
-      multiplier: multiplier
+    const found = quality.modifiers.find(x => x.name === name && x.specific === specific);
+    if(!found){
+      const modifier: IPowerModifier = {
+        ref: ref,
+        name: name,
+        specific: specific,
+        cost: cost,
+        multiplier: multiplier
+      }
+      dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
+    }
+    else{
+      found.multiplier = found.multiplier + 1;
     }
     setMultiplier(1);
     setSpecific('');
-    dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
   }
   function setQualityMultiplier(direction: boolean){
     if(direction) dispatch(createAction(PowerQualityActionKind.INC_MULTIPLIER, undefined));
@@ -177,19 +182,16 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQuali
           <div><label htmlFor="filter">Filter</label> <input type="text" id='filter' value={filter} onChange={(e) => setFilter(e.target.value.toLowerCase())} /></div>
           <div><input type='checkbox' id='focusFilter' checked={focusFilter} onChange={(e) => setFocusFilter(e.target.checked)} /> <label htmlFor='focusFilter'>Show Focus Extras/Flaws</label></div>
         </div>
-        <div className='powerquality-modal__pair'>
-          <h3>Extras</h3>
-          <h3>Flaws</h3>
-        </div>
+        
         <div className='powerquality-modal__pair powerquality-modal__scrollarea'>
-          <div className='btnlist'>
+          <div className='btnlist powerquality-modal__extras'>
             {Modifiers.extra.filter(x => shouldShow(x)).map(x => (
               <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
                 {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : '+' + x.cost})
               </button>
             ))}
           </div>
-          <div className='btnlist'>
+          <div className='btnlist powerquality-modal__flaws'>
             {Modifiers.flaws.filter(x => shouldShow(x)).map(x => (
               <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
                 {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : x.cost})
