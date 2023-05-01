@@ -72,6 +72,11 @@ body{
   &__powerlist{
     grid-area: list;
   }
+  &__powerlist-control{
+    display: flex;
+    justify-content: space-between;
+    padding: space(4) space(2)
+  }
   &__poweritem{
     cursor: pointer;
     display: flex;

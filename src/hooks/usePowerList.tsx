@@ -12,14 +12,14 @@ export enum PowerListActionKind {
   DEL_POWER = 'del-power',
 }
 type AddPowerAction = Action<typeof PowerListActionKind.UPDATE_POWER, {name: string, qualities: IPowerQuality[]}>;
-function reduceAddCharAction(state: IPowerRegistry, action: AddPowerAction): IPowerRegistry {
+function reduceUpdatePowerAction(state: IPowerRegistry, action: AddPowerAction): IPowerRegistry {
   if (!action.payload) return state;
   const newState: IPowerRegistry = {...state};
   newState[action.payload.name] = action.payload.qualities;
   return newState;
 }
 type DelPowerAction = Action<typeof PowerListActionKind.DEL_POWER, string>;
-function reduceDelCharAction(state: IPowerRegistry, action: DelPowerAction): IPowerRegistry {
+function reduceDeletePowerAction(state: IPowerRegistry, action: DelPowerAction): IPowerRegistry {
   if (!action.payload) return state;
   //delete state[action.payload];
   const newState: IPowerRegistry = {};
@@ -36,9 +36,9 @@ export type PowerListActions = AddPowerAction | DelPowerAction;
 function powerListReducer(state: IPowerRegistry, action: PowerListActions): IPowerRegistry {
   switch (action.type) {
     case PowerListActionKind.UPDATE_POWER:
-      return reduceAddCharAction(state, action);
+      return reduceUpdatePowerAction(state, action);
     case PowerListActionKind.DEL_POWER:
-      return reduceDelCharAction(state, action);
+      return reduceDeletePowerAction(state, action);
     default:
       return state;
   }
