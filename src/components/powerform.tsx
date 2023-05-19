@@ -40,7 +40,11 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const totalCost = powerQualities.reduce((total: number, item: IPowerQuality) => total + QualityHelper.calculateCost(item), 0);
 
   function saveNewQuality(result: IPowerQuality): void {
-    result.ref = result.name + (result.specific ?? Math.trunc(Math.random() * 100000));
+    let identifier = result.specific;
+    if(!result.specific || result.specific === ''){
+      identifier = Math.trunc(Math.random() * 100000).toString();
+    }
+    result.ref = result.name + identifier;
     setPowerQualities((qualities) => [...qualities, result]);
   }
   function deleteQuality(ref: string): void {
