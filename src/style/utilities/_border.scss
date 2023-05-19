@@ -6,15 +6,27 @@
 
 .border-left{
   border-left: 1px solid black;
+  &--thick{
+    border-left-width: 2px;
+  }
 }
 .border-right{
   border-right: 1px solid black;
+  &--thick{
+    border-right-width: 2px;
+  }
 }
 .border-top{
   border-top: 1px solid black;
+  &--thick{
+    border-top-width: 2px;
+  }
 }
 .border-bottom{
   border-bottom: 1px solid black;
+  &--thick{
+    border-bottom-width: 2px;
+  }
 }
 
 .border-color{

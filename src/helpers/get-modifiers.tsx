@@ -81,14 +81,17 @@ const flaws: IPowerModifier[] = [
   makeModifier('Touch Only', -2),
   makeModifier('Uncontrollable', -1),
   makeFocusModifier('Unwieldy', -1, '-1 or -2'),
+  makeModifier('Willpower Bid', -1),
+  makeModifier('Willpower Cost', -2),
+  makeModifier('Willpower Investment', -1),
 ];
 function makeModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
   const ref = name;
-  return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1 };
+  return { name: name, ref: ref, cost: cost, costOptions: options, multiplier: 1 };
 }
 function makeFocusModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
   const ref = name;
-  return { name: name, ref: ref, cost: cost || cost, costOptions: options, multiplier: 1, focus: true };
+  return { name: name, ref: ref, cost: cost, costOptions: options, multiplier: 1, focus: true };
 }
 
 export const Modifiers = {extra: extras, flaws};
