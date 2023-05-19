@@ -13,19 +13,19 @@ interface PowerQualityEditorProps {
   onChange: React.Dispatch<React.SetStateAction<IPowerQuality>>
 }
 
-const PowerQualityEditor: React.FC<PowerQualityEditorProps> = (props: PowerQualityEditorProps) => {
+const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({initialData, onChange}: PowerQualityEditorProps) => {
   const [description, setDescription] = useState<string[]>([]);
   const [multiplier, setMultiplier] = useState(1);
   const [specific, setSpecific] = useState<string>('');
   const [cost, setCost] = useState(1);
-  const [quality, dispatch] = usePowerQuality(props.initialData);
+  const [quality, dispatch] = usePowerQuality(initialData);
   const [exampleModifier, setExampleModifierState] = useState<IPowerModifier>(Modifiers.extra[0]);
   const [filter, setFilter] = useState<string>('');
   const [focusFilter, setFocusFilter] = useState<boolean>(false);
   
   useEffect(() => {
-    props.onChange(quality);
-  },[quality]);
+    onChange(quality);
+  },[quality, onChange]);
 
   function setCapacity(capacity: TCapacity) {
     dispatch(createAction(PowerQualityActionKind.SET_MAIN_CAPACITY, capacity))

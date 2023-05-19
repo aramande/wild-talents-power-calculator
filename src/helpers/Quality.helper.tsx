@@ -68,8 +68,9 @@ class QualityHelper{
           const type = modifier.specific?.toLowerCase();
           if (type === 'mass')
             state.maxMass = true;
-          else if (type === 'range')
+          else if (type === 'range'){
             state.maxRange = true;
+          }
           else if (type === 'speed')
             state.maxSpeed = true;
           break;

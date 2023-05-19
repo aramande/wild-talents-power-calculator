@@ -40,7 +40,7 @@ export class Capacity {
   getMeasure(): string{
     if(this.type === 'Mass') return ' lbs';
     if(this.type === 'Range') return ' yards';
-    if(this.type === 'Speed') return ' yards';
+    if(this.type === 'Speed') return ' ypr';
     return '';
   }
 }
@@ -57,39 +57,46 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
   const booster = quality.modifiers.find(x => x.name.toLowerCase() === 'booster');
   const boosterCount = booster?.multiplier ? booster.multiplier : 0;
   
-  const massCapacity = new Capacity('Mass', state, massDice);
-  const rangeCapacity = new Capacity('Range', state, rangeDice);
-  const speedCapacity = new Capacity('Speed', state, speedDice);
+  const massCapacity = new Capacity('Mass', state, state.maxMass ? rangeDice + speedDice : massDice);
+  const rangeCapacity = new Capacity('Range', state, state.maxRange ? massDice + speedDice : rangeDice);
+  const speedCapacity = new Capacity('Speed', state, state.maxSpeed ? rangeDice + massDice : speedDice);
 
   function isOnlyMass(): boolean{
-    return state.mass && !state.maxMass && (!state.range || state.maxRange) && (!state.speed || state.maxSpeed);
+    // return state.mass && !state.maxMass && (!state.range || state.maxRange) && (!state.speed || state.maxSpeed);
+    return state.mass && !state.range && !state.speed;
   }
   function isOnlyRange(): boolean{
-    return (!state.mass || state.maxMass) && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+    // return (!state.mass || state.maxMass) && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+    return !state.mass && state.range && !state.speed;
   }
   function isOnlySpeed(): boolean{
-    return (!state.mass || state.maxMass) && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+    // return (!state.mass || state.maxMass) && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+    return !state.mass && !state.range && state.speed;
   }
   function isRangeAndSpeed(): boolean{
-    return (!state.mass || state.maxMass) && state.range && !state.maxRange && state.speed && !state.maxSpeed;
+    // return (!state.mass || state.maxMass) && state.range && !state.maxRange && state.speed && !state.maxSpeed;
+    return !state.mass && state.range && state.speed;
   }
   function isMassAndRange(): boolean{
-    return state.mass && !state.maxMass && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+    // return state.mass && !state.maxMass && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
+    return state.mass && state.range && !state.speed;
   }
   function isMassAndSpeed(): boolean{
-    return state.mass && !state.maxMass && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+    // return state.mass && !state.maxMass && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
+    return state.mass && !state.range && state.speed;
   }
   function isAll(): boolean{
-    return state.mass && !state.maxMass && state.range && !state.maxRange && state.speed && !state.maxRange;
+    // return state.mass && !state.maxMass && state.range && !state.maxRange && state.speed && !state.maxRange;
+    return state.mass && state.range && state.speed;
   }
 
   return (
     <>
       <h4>Capacity Calculator</h4>
       <div className='infobox__dice-distribution'>
-        {state.mass && <><label htmlFor="MassDice">Mass</label><input min='0' type='number' id='MassDice' value={massDice} onChange={(e) => setMassDice(parseInt(e.target.value))}/></>}
-        {state.range && <><label htmlFor="RangeDice">Range</label><input min='0' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}
-        {state.speed && <><label htmlFor="SpeedDice">Speed</label><input min='0' type='number' id='SpeedDice' value={speedDice} onChange={(e) => setSpeedDice(parseInt(e.target.value))}/></>}
+        {(state.mass && !state.maxMass) && <><label htmlFor="MassDice">Mass</label><input min='0' type='number' id='MassDice' value={massDice} onChange={(e) => setMassDice(parseInt(e.target.value))}/></>}
+        {(state.range && !state.maxRange) && <><label htmlFor="RangeDice">Range</label><input min='0' type='number' id='RangeDice' value={rangeDice} onChange={(e) => setRangeDice(parseInt(e.target.value))}/></>}
+        {(state.speed && !state.maxSpeed) && <><label htmlFor="SpeedDice">Speed</label><input min='0' type='number' id='SpeedDice' value={speedDice} onChange={(e) => setSpeedDice(parseInt(e.target.value))}/></>}
       </div>
       {isOnlyMass() && <OneCapacity reduced={state.reduced} boosters={boosterCount} capacity={massCapacity} offCapacity={rangeCapacity} offCapacity2={speedCapacity} />}
       {isOnlyRange() && <OneCapacity reduced={state.reduced} boosters={boosterCount} capacity={rangeCapacity} offCapacity={massCapacity} offCapacity2={speedCapacity} />}
