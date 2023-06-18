@@ -17,7 +17,7 @@ const PowerQuality: React.FC<PowerQualityProps> = ({ info, showInfo }) => {
     <div className='powerquality'>
       <header className='powerquality__row'>
         <h2 className='powerquality__name' onClick={() => showInfo(info)}>{info.multiplier-1 > 0 ? `+${info.multiplier-1} ` : ''}{info.name}</h2>
-        {info.specific && <span>({info.specific})</span>}
+        {info.specific?.length > 0 && <span>({info.specific})</span>}
         <small className="powerquality__cost">{`(${cost})`}</small>
       </header>
       <small>Capacities: {capacities.join(', ')}</small>

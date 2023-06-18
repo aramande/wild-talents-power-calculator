@@ -19,7 +19,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({info}) => {
   return (
     <div className='infobox'>
       <h1 className='infobox__name'>{info.name}</h1>
-      {info.specific && (<span className='infobox__specific'>{info.specific}</span>)}
+      <span className='infobox__specific'>{info.specific}</span>
       <div className='infobox__scrollbox'>
         <div>
           {quality.modifiers && <CapacityCalc quality={quality}/>}

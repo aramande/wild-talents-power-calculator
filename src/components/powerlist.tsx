@@ -34,9 +34,9 @@ const PowerList: React.FC<PowerListProps> = (props) => {
   function exportSelected(): void{
     const toExport: Record<string, string> = {}; 
     for (const name of Object.keys(props.savedPowers)) {
-      const power = props.savedPowers[name].qualities ? props.savedPowers[name] : new Power(props.savedPowers[name] as any) ;
+      const power = props.savedPowers[name].qualities !== undefined ? props.savedPowers[name] : new Power(props.savedPowers[name] as any) ;
       if(selectedPower.indexOf(name) >= 0){
-        toExport[name] = power.toString();
+        toExport[name] = Power.export(power);
       }
     }
     setOpenExport(JSON.stringify(toExport));
@@ -45,8 +45,7 @@ const PowerList: React.FC<PowerListProps> = (props) => {
     try{
       const toImport = JSON.parse(content);
       for (const name of Object.keys(toImport)) {
-        const power = Power.fromString(toImport[name]);
-        console.log('power', power);
+        const power = Power.import(toImport[name]);
         props.dispatchPower(createAction(PowerListActionKind.UPDATE_POWER_OBJ, {name: name, power: power }))
       }
     }

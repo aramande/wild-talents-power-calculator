@@ -15,7 +15,7 @@ const PowerModifier: React.FC<PowerModifierProps> = ({info, showInfo}) => {
     <div className='powermodifier'>
       <header className='powermodifier__header'>
         <strong className='powermodifier__name' onClick={() => showInfo(info)}>{info.multiplier > 1 ? `+${info.multiplier} ` : ''}{info.name}</strong> 
-        {modifier.specific && (<span className='powermodifier__specific'>({modifier.specific})</span>)}
+        {modifier.specific?.length > 0 && <span className='powermodifier__specific'>({modifier.specific})</span>}
         <small className="powermodifier__cost">{`(${cost(info)})`}</small>
       </header>
     </div>

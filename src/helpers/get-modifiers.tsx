@@ -1,6 +1,7 @@
 import { IPowerModifier } from '../interfaces/power.interface';
 
 
+const specialCost: Record<string, string> = {};
 const extras: IPowerModifier[] = [
   makeModifier('Area', 1, '+1 per Area die'),
   makeModifier('Augment', 4),
@@ -87,11 +88,17 @@ const flaws: IPowerModifier[] = [
 ];
 function makeModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
   const ref = name;
-  return { name: name, ref: ref, cost: cost, costOptions: options, multiplier: 1 };
+  if(options) specialCost[name] = options;
+  return { name: name, specific: '', ref: ref, cost: cost, multiplier: 1 };
 }
 function makeFocusModifier(name: string, cost: number = 1, options?: string): IPowerModifier {
   const ref = name;
-  return { name: name, ref: ref, cost: cost, costOptions: options, multiplier: 1, focus: true };
+  if(options) specialCost[name] = options;
+  return { name: name, specific: '', ref: ref, cost: cost, multiplier: 1, focus: true };
 }
 
 export const Modifiers = {extra: extras, flaws};
+export function getDisplayCost(modifier: IPowerModifier): string{
+  if(specialCost[modifier.name]) return specialCost[modifier.name];
+  return modifier.cost > 0 ? `+${modifier.cost}` : modifier.cost.toString();
+}

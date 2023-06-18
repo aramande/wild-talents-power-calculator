@@ -16,18 +16,18 @@ export class Power {
     this.tags = tags ?? [];
   }
 
-  toString(): string{
+  static export(power: Power): string{
     function printQuality(quality: IPowerQuality): string{
-      let result = `${quality.ref};${quality.name};${quality.specific};${quality.multiplier};${quality.capacity};${quality.cost};${quality.emulatedPower?'emu':'no'}`;
+      let result = `${quality.ref};${quality.name};${quality.specific ?? ''};${quality.multiplier};${quality.capacity};${quality.cost};${quality.emulatedPower?'emu':'no'}`;
       for (const modifier of quality.modifiers) {
-        result += `;~${modifier.ref};${modifier.name};${modifier.specific};${modifier.multiplier};${modifier.cost};${modifier.focus?'foc':'no'}`
+        result += `;~${modifier.ref};${modifier.name};${modifier.specific ?? ''};${modifier.multiplier};${modifier.cost};${modifier.focus?'foc':'no'}`
       }
       return result;
     }
-    return `1;~~${this.tags.join(';')};~~${this.qualities.map(x => printQuality(x)).join(';~~')}`;
+    return `1;~~${power.tags.join(';')};~~${power.qualities.map(x => printQuality(x)).join(';~~')}`;
   }
 
-  static fromString(content: string): Power{
+  static import(content: string): Power{
     try {
       if(content.startsWith('1;')){
         const parts = content.split(';~~');
@@ -43,7 +43,7 @@ export class Power {
             const modifier: IPowerModifier = {
               ref: modifierParts[0], 
               name: modifierParts[1], 
-              specific: modifierParts[2].length > 0 ? modifierParts[2] : undefined,
+              specific: modifierParts[2],
               multiplier: parseInt(modifierParts[3]),
               cost: parseInt(modifierParts[4]),
               focus: modifierParts[5] === 'foc',
@@ -53,7 +53,7 @@ export class Power {
           const quality: IPowerQuality = {
             ref: qualityParts[0], 
             name: qualityParts[1], 
-            specific: qualityParts[2].length > 0 ? qualityParts[2] : undefined,
+            specific: qualityParts[2],
             multiplier: parseInt(qualityParts[3]),
             capacity: qualityParts[4] as any,
             cost: parseInt(qualityParts[5]),

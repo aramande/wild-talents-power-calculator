@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity } from '../interfaces/power.interface';
 import { getDescription } from '../helpers/get-description';
-import { Modifiers } from '../helpers/get-modifiers';
+import { Modifiers, getDisplayCost } from '../helpers/get-modifiers';
 import { PowerQualityActionKind, usePowerQuality } from '../hooks/usePowerQuality';
 import { createAction } from '../helpers/Reducer';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -187,14 +187,14 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({initialData, onC
           <div className='btnlist powerquality-modal__extras'>
             {Modifiers.extra.filter(x => shouldShow(x)).map(x => (
               <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-                {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : '+' + x.cost})
+                {x.name}{x.focus?(<sup>F</sup>):''} ({getDisplayCost(x)})
               </button>
             ))}
           </div>
           <div className='btnlist powerquality-modal__flaws'>
             {Modifiers.flaws.filter(x => shouldShow(x)).map(x => (
               <button key={x.ref} type="button" className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'} onClick={() => setExampleModifier(x)} >
-                {x.name}{x.focus?(<sup>F</sup>):''} ({x.costOptions ? x.costOptions : x.cost})
+                {x.name}{x.focus?(<sup>F</sup>):''} ({getDisplayCost(x)})
               </button>
             ))}
           </div>
