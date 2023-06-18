@@ -6,25 +6,30 @@ import useModal from '../hooks/useModal';
 import EditPowerQualityModal from '../modals/edit-power-quality.modal';
 import { Button } from 'react-bootstrap';
 import QualityHelper from '../helpers/Quality.helper';
+import { Power } from '../hooks/usePowerList';
 
 interface PowerFormProps {
   name?: string,
-  qualities?: IPowerQuality[],
+  power?: Power,
   showInfo: (info: IPowerItem) => void,
-  onSavePower: (name: string, qualities: IPowerQuality[]) => void
+  onSavePower: (name: string, power: Power) => void
 }
 
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [name, setName] = useState<string>('Undefined Power');
   const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
   const [editQualityModalOpen, toggleEditQualityModal] = useModal();
 
   useEffect(() => {
     if(props.name) setName(props.name);
-    if(props.qualities) setPowerQualities(props.qualities);
-  }, [props.name, props.qualities])
+    if(props.power) {
+      setPowerQualities(props.power.qualities); 
+      setTags(props.power.tags);
+    }
+  }, [props.name, props.power])
 
   function closeAddQualityModal() {
     toggleAddQualityModal(false);
@@ -55,7 +60,8 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setPowerQualities((qualities) => qualities.map(x => x.ref === result.ref ? result : x));
   }
   function savePower(): void{
-    props.onSavePower(name, powerQualities)
+    const power = new Power(powerQualities, tags);
+    props.onSavePower(name, power)
   }
   function clearPower(): void{
     setName('Undefined Power');

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IPowerRegistry, PowerListActionKind, PowerListActions } from '../hooks/usePowerList';
+import { IPowerRegistry, Power, PowerListActionKind, PowerListActions } from '../hooks/usePowerList';
 import { IPowerQuality } from '../interfaces/power.interface';
 import { createAction } from '../helpers/Reducer';
 import { Button } from 'react-bootstrap';
@@ -10,7 +10,7 @@ import TextboxModal from '../modals/textbox.modal';
 interface PowerListProps {
   savedPowers: IPowerRegistry;
   dispatchPower: React.Dispatch<PowerListActions>;
-  setPower: (name: string, qualities: IPowerQuality[]) => void;
+  setPower: (name: string, qualities: Power) => void;
 }
 
 const PowerList: React.FC<PowerListProps> = (props) => {
@@ -32,21 +32,22 @@ const PowerList: React.FC<PowerListProps> = (props) => {
     });
   }
   function exportSelected(): void{
-    const toExport: IPowerRegistry = {}; 
+    const toExport: Record<string, string> = {}; 
     for (const name of Object.keys(props.savedPowers)) {
+      const power = props.savedPowers[name].qualities ? props.savedPowers[name] : new Power(props.savedPowers[name] as any) ;
       if(selectedPower.indexOf(name) >= 0){
-        toExport[name] = props.savedPowers[name];
+        toExport[name] = power.toString();
       }
     }
     setOpenExport(JSON.stringify(toExport));
   }
   function importJSON(content: string): void{
     try{
-      console.log('content is', content);
       const toImport = JSON.parse(content);
-      console.log('importing', toImport)
       for (const name of Object.keys(toImport)) {
-        props.dispatchPower(createAction(PowerListActionKind.UPDATE_POWER, {name: name, qualities: toImport[name]}))
+        const power = Power.fromString(toImport[name]);
+        console.log('power', power);
+        props.dispatchPower(createAction(PowerListActionKind.UPDATE_POWER_OBJ, {name: name, power: power }))
       }
     }
     catch(error){
@@ -67,12 +68,13 @@ const PowerList: React.FC<PowerListProps> = (props) => {
 
   return (
     <>
-      {Object.entries(props.savedPowers).map(([name, qualities]) => {
-        const cost = calculateTotalCost(qualities);
+      {Object.entries(props.savedPowers).map(([name, power]) => {
+        if(power.qualities === undefined) power = new Power(power as any); //Support for old style powers
+        const cost = calculateTotalCost(power.qualities);
         return (
         <div className='app__poweritem' key={name} >
           <input type='checkbox' value={name} checked={selectedPower.indexOf(name) >= 0} onChange={() => selectPower(name)} />
-          <span onClick={() => props.setPower(name, qualities)}><strong>{name}</strong> ({cost}/{cost*2}/{cost*4})</span>
+          <span onClick={() => props.setPower(name, power)}><strong>{name}</strong> ({cost}/{cost*2}/{cost*4})</span>
         </div>
       )})}
       <div className='app__powerlist-control'>
