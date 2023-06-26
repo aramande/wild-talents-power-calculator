@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import PowerQuality from './powerquality';
-import { IPowerItem, IPowerQuality } from '../interfaces/power.interface';
-import AddPowerQualityModal from '../modals/add-power-quality.modal';
-import useModal from '../hooks/useModal';
-import EditPowerQualityModal from '../modals/edit-power-quality.modal';
+import PowerQuality from '../powerquality';
+import { IPowerItem, IPowerQuality } from '../../interfaces/power.interface';
+import AddPowerQualityModal from '../../modals/add-power-quality.modal';
+import useModal from '../../hooks/useModal';
+import EditPowerQualityModal from '../../modals/edit-power-quality.modal';
 import { Button } from 'react-bootstrap';
-import QualityHelper from '../helpers/Quality.helper';
-import { Power } from '../hooks/usePowerList';
+import QualityHelper from '../../helpers/Quality.helper';
+import { Power } from '../../hooks/usePowerList';
+import { ReactTags, Tag, TagSuggestion } from 'react-tag-autocomplete';
+import styles from './powerform.module.scss';
 
 interface PowerFormProps {
   name?: string,
   power?: Power,
+  tagSuggestions: TagSuggestion[],
   showInfo: (info: IPowerItem) => void,
   onSavePower: (name: string, power: Power) => void
 }
@@ -18,7 +21,7 @@ interface PowerFormProps {
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [name, setName] = useState<string>('Undefined Power');
   const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
   const [editQualityModalOpen, toggleEditQualityModal] = useModal();
@@ -67,25 +70,32 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setName('Undefined Power');
     setPowerQualities([]);
   }
+  function addTag(tag: Tag){
+    setTags(x => [...x, tag]);
+  }
+  function deleteTag(index: number){
+    setTags(x => x.splice(index, 1));
+  }
 
   return (
-    <section className='powerform'>
+    <section className={styles.powerform}>
       <header>
         <h1><input onChange={(e) => setName(e.target.value)} value={name} /></h1>
       </header>
-      <div className='powerform__dicecost'>({totalCost}/{totalCost*2}/{totalCost*4})</div>
-      <article className='powerform__qualitylist'>
+      <div className={styles.dicecost}>({totalCost}/{totalCost*2}/{totalCost*4})</div>
+      <ReactTags selected={tags} suggestions={props.tagSuggestions} onAdd={addTag} onDelete={deleteTag} allowNew={true} placeholderText='Enter Tags' noOptionsText='Press Enter to add new tag' />
+      <article className={styles.qualitylist}>
         {powerQualities.map(x => (
           <div key={x.ref} className='relative'>  
-            <button className='powerform__edit btn btn--neutral' onClick={(() => editQuality(x))}><i className='fa-solid fa-edit'></i></button>
+            <button className={`${styles.edit} btn btn--neutral`} onClick={(() => editQuality(x))}><i className='fa-solid fa-edit'></i></button>
             <PowerQuality info={x} showInfo={props.showInfo}></PowerQuality>
           </div>
         ))}
       </article>
       <div>
-        <button className='powerform__add btn btn--neutral' onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
+        <button className={`${styles.add} btn btn--neutral`} onClick={() => toggleAddQualityModal(true)}><i className='fa-solid fa-plus'></i> Add power quality</button>
       </div>
-      <footer className='powerform__btnfooter'>
+      <footer className={styles.btnfooter}>
         <Button className='btn--delete'  onClick={() => clearPower()}>Clear</Button>
         <Button className='btn--primary' onClick={() => savePower()}>Save</Button>
       </footer>

@@ -16,6 +16,7 @@
     "react-fontawesome": "^1.7.1",
     "react-markdown": "^8.0.7",
     "react-scripts": "^5.0.1",
+    "react-tag-autocomplete": "^7.0.0-rc.7",
     "react-tooltip": "^5.11.1",
     "typescript": "^5.0.4",
     "web-vitals": "^2.1.4"

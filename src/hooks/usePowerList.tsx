@@ -1,17 +1,17 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { Action } from '../helpers/Reducer';
 import { IPowerModifier, IPowerQuality } from '../interfaces/power.interface';
-import { Modifiers } from '../helpers/get-modifiers';
+import { Tag, TagSuggestion } from 'react-tag-autocomplete';
 
 export interface IPowerRegistry{
   [key: string]: Power;
 }
 export class Power {
   qualities: IPowerQuality[];
-  tags: string[];
+  tags: Tag[];
 
-  constructor(qualities?: IPowerQuality[], tags?: string[]) {
+  constructor(qualities?: IPowerQuality[], tags?: Tag[]) {
     this.qualities = qualities ?? [];
     this.tags = tags ?? [];
   }
@@ -24,14 +24,14 @@ export class Power {
       }
       return result;
     }
-    return `1;~~${power.tags.join(';')};~~${power.qualities.map(x => printQuality(x)).join(';~~')}`;
+    return `1;~~${power.tags.map(x => x.value).join(';')};~~${power.qualities.map(x => printQuality(x)).join(';~~')}`;
   }
 
   static import(content: string): Power{
     try {
       if(content.startsWith('1;')){
         const parts = content.split(';~~');
-        const tags = parts[1].split(';').filter(x => x);
+        const tags = parts[1].split(';').filter(x => x).map(x => ({value: x, label: x}));
         const qualities: IPowerQuality[] = [];
         for (let i = 2; i < parts.length; i++) {
           const newQuality = parts[i];
@@ -86,7 +86,7 @@ function reduceUpdatePowerObjAction(state: IPowerRegistry, action: UpdatePowerOb
   newState[action.payload.name] = action.payload.power;
   return newState;
 }
-type UpdatePowerAction = Action<typeof PowerListActionKind.UPDATE_POWER, {name: string, qualities: IPowerQuality[], tags: string[]}>;
+type UpdatePowerAction = Action<typeof PowerListActionKind.UPDATE_POWER, {name: string, qualities: IPowerQuality[], tags: Tag[]}>;
 function reduceUpdatePowerAction(state: IPowerRegistry, action: UpdatePowerAction): IPowerRegistry {
   if (!action.payload) return state;
   const newState: IPowerRegistry = {...state};
@@ -121,13 +121,27 @@ function powerListReducer(state: IPowerRegistry, action: PowerListActions): IPow
   }
 }
 
-export function usePowerList(): [IPowerRegistry, React.Dispatch<PowerListActions>] {
+export function usePowerList(): [IPowerRegistry, React.Dispatch<PowerListActions>, TagSuggestion[]] {
   const [powerListStorage, setPowerListStorage] = useLocalStorage<IPowerRegistry>('powerlist', {});
   const [powers, dispatch] = useReducer(powerListReducer, powerListStorage);
+  const [tagSuggestions, setTagSuggestions] = useState<TagSuggestion[]>([])
 
   useEffect(() => {
     setPowerListStorage((c) => powers);
   }, [powers, setPowerListStorage]);
+  
+  useEffect(()=>{
+    const newTagSuggestions: TagSuggestion[] = [];
+    const savedTags = Object.values(powers).map(x => x.tags);
+    for (const tagGroups of savedTags) {
+      for (const tag of tagGroups) {
+        if(!newTagSuggestions.find(x => x.value === tag.value)){
+          newTagSuggestions.push(tag);
+        }
+      }
+    }
+    setTagSuggestions(newTagSuggestions);
+  }, [powers, setTagSuggestions]);
 
-  return [powers, dispatch];
+  return [powers, dispatch, tagSuggestions];
 }

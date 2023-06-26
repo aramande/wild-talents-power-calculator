@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IPowerRegistry, Power, PowerListActionKind, PowerListActions } from '../hooks/usePowerList';
 import { IPowerQuality } from '../interfaces/power.interface';
 import { createAction } from '../helpers/Reducer';
@@ -6,19 +6,36 @@ import { Button } from 'react-bootstrap';
 import ConfirmModal from '../modals/confirm.modal';
 import QualityHelper from '../helpers/Quality.helper';
 import TextboxModal from '../modals/textbox.modal';
+import { ReactTags, Tag, TagSuggestion } from 'react-tag-autocomplete';
+import { contains } from '../helpers/contains';
 
 interface PowerListProps {
   savedPowers: IPowerRegistry;
+  tagSuggestions: TagSuggestion[];
   dispatchPower: React.Dispatch<PowerListActions>;
   setPower: (name: string, qualities: Power) => void;
 }
 
 const PowerList: React.FC<PowerListProps> = (props) => {
   
+  const [tags, setTags] = useState<Tag[]>([]);
   const [openConfirmRemove, setOpenConfirmRemove] = useState<boolean>(false);
   const [openExport, setOpenExport] = useState<string|undefined>(undefined);
   const [openImport, setOpenImport] = useState<boolean>(false);
   const [selectedPower, setSelectedPower] = useState<string[]>([]);
+  const [visiblePowers, setVisiblePowers] = useState<[string, Power][]>([]);
+
+  useEffect(() => {
+    const filteredPowers = Object.entries(props.savedPowers).filter(([, power]) => contains(power.tags, tags));
+    setVisiblePowers(filteredPowers);
+  }, [props.savedPowers, tags, setVisiblePowers]);
+
+  function addTag(tag: Tag){
+    setTags(x => [...x, tag]);
+  }
+  function deleteTag(index: number){
+    setTags(x => x.filter((_, i)=> i!==index));
+  }
   
   function calculateTotalCost(qualities: IPowerQuality[]): number{
     const totalCost = qualities.reduce((total: number, item: IPowerQuality) => total + QualityHelper.calculateCost(item), 0);
@@ -67,7 +84,9 @@ const PowerList: React.FC<PowerListProps> = (props) => {
 
   return (
     <>
-      {Object.entries(props.savedPowers).map(([name, power]) => {
+      <ReactTags selected={tags} suggestions={props.tagSuggestions} onAdd={addTag} onDelete={deleteTag} placeholderText='Search' />
+      
+      {visiblePowers.map(([name, power]) => {
         if(power.qualities === undefined) power = new Power(power as any); //Support for old style powers
         const cost = calculateTotalCost(power.qualities);
         return (
