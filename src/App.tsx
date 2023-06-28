@@ -4,7 +4,7 @@ import InfoBox from './components/InfoBox/infobox';
 import { IPowerItem } from './interfaces/power.interface';
 import { Power, PowerListActionKind, usePowerList } from './hooks/usePowerList';
 import { createAction } from './helpers/Reducer';
-import PowerList from './components/powerlist';
+import PowerList from './components/PowerList/powerlist';
 
 function App() {
   const [info, setInfo] = useState<IPowerItem>();

@@ -1,0 +1,14 @@
+@use '../../style/abstracts/' as *;
+
+.poweritem {
+  cursor: pointer;
+  display: flex;
+  gap: space(4);
+  margin-top: space(1);
+  margin-right: space(4);
+}
+.control {
+  display: flex;
+  justify-content: space-between;
+  padding: space(4) space(2);
+}
