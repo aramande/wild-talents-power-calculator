@@ -23,20 +23,20 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({
   for (let index = 0; index <= boosters; index++) {
     if (index === 0) {
       headerRow.push(
-        <th key={'headerItem' + index} className="border-left border-color--primary border-left--thick" colSpan={3}>
+        <th key={'headerItem' + index} className={style.cellBorder} colSpan={3}>
           {rangeCapacity.getType()}
         </th>
       );
     } else {
       headerRow.push(
-        <th key={'headerItem' + index} className="border-left border-color--primary" colSpan={3}>
+        <th key={'headerItem' + index} className={`${style.cell} ${style.cellBorder}`} colSpan={3}>
           {index}
         </th>
       );
     }
   }
   header.push(
-    <tr key="mainHeaderRow" className="border-bottom border-color--primary border-bottom--thick">
+    <tr key="mainHeaderRow" className={style.headerRow}>
       <th></th>
       {headerRow}
     </tr>
@@ -55,13 +55,13 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({
       else
         rowContent.push(
           <React.Fragment key={rowIndex + 'x' + colIndex}>
-            <td className="border-left border-color--primary">
+            <td className={`${style.cell} ${style.cellBorder}`}>
               {massCapacity.getValue() * Math.pow(10, rowIndex) * Math.pow(10, -reduced)} {massCapacity.getMeasure()}
             </td>
-            <td>
+            <td className={style.cell}>
               {rangeCapacity.getValue() * Math.pow(10, colIndex) * Math.pow(10, -reduced)} {rangeCapacity.getMeasure()}
             </td>
-            <td>
+            <td className={`${style.cell}`}>
               {speedCapacity.getValue() * Math.pow(10, boosters - rowIndex - colIndex) * Math.pow(10, -reduced)}{' '}
               {speedCapacity.getMeasure()}
             </td>
@@ -70,15 +70,15 @@ const ThreeCapacities: React.FC<ThreeCapacitiesProps> = ({
     }
     if (rowIndex === 0) {
       rows.push(
-        <tr className="border-bottom border-color--primary" key={'row' + rowIndex}>
-          <th className="border-right border-color--primary border-right--thick">{massCapacity.getType()}</th>
+        <tr key={'row' + rowIndex} className={style.row}>
+          <th className={style.headerCol}>{massCapacity.getType()}</th>
           {rowContent}
         </tr>
       );
     } else {
       rows.push(
-        <tr className="border-bottom border-color--primary" key={'row' + rowIndex}>
-          <th className="border-right border-color--primary border-right--thick">{rowIndex}</th>
+        <tr key={'row' + rowIndex} className={style.row}>
+          <th className={style.headerCol}>{rowIndex}</th>
           {rowContent}
         </tr>
       );

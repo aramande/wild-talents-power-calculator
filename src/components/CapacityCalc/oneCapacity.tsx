@@ -12,13 +12,13 @@ const OneCapacity: React.FC<OneCapacityProps> = ({ capacity, boosters, reduced, 
   const header = [];
   const rows = [];
   header.push(
-    <tr key="header" className="border-bottom border-color--primary border-bottom--thick">
+    <tr key="header" className={style.headerRow}>
       <td>{capacity.getType()}</td>
     </tr>
   );
   rows.push(
     <tr key="row">
-      <td>
+      <td className={style.cell}>
         {capacity.getValue() * Math.pow(10, boosters) * Math.pow(10, -reduced)} {capacity.getMeasure()}
       </td>
     </tr>

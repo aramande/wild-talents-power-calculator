@@ -20,7 +20,7 @@ const TwoCapacities: React.FC<TwoCapacitiesProps> = ({
   const header = [];
   const rows = [];
   header.push(
-    <tr key={'headerRow'} className="border-bottom border-color--primary border-bottom--thick">
+    <tr key={'headerRow'} className={style.headerRow}>
       <td>{firstCapacity.getType()}</td>
       <td>{secondCapacity.getType()}</td>
       {offCapacity.isMaxed() && <td>{offCapacity.getType()}</td>}
@@ -28,11 +28,11 @@ const TwoCapacities: React.FC<TwoCapacitiesProps> = ({
   );
   for (let rowIndex = 0; rowIndex <= boosters; rowIndex++) {
     rows.push(
-      <tr className="border-bottom border-color--primary border-right border-left" key={'row' + rowIndex}>
-        <td>
+      <tr key={'row' + rowIndex} className={style.row}>
+        <td className={style.cell}>
           {firstCapacity.getValue() * Math.pow(10, rowIndex) * Math.pow(10, -reduced)} {firstCapacity.getMeasure()}
         </td>
-        <td>
+        <td className={style.cell}>
           {secondCapacity.getValue() * Math.pow(10, boosters - rowIndex) * Math.pow(10, -reduced)}{' '}
           {secondCapacity.getMeasure()}
         </td>
