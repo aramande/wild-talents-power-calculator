@@ -1,0 +1,26 @@
+@use '../../style/abstracts/' as *;
+
+.powermodifier {
+  padding-left: space(2);
+}
+.header {
+  display: table-row;
+}
+.name {
+  display: table-cell;
+  cursor: help;
+  margin: 0;
+  width: auto;
+}
+.specific {
+  display: table-cell;
+  padding-left: space(1);
+}
+.cost {
+  padding-left: space(2);
+  display: table-cell;
+}
+.edit {
+  margin-left: space(2);
+  display: table-cell;
+}

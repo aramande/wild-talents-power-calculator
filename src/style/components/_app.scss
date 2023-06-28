@@ -1,14 +1,14 @@
-@use "../abstracts/" as *;
-@use "../tools/screen";
-body{
+@use '../abstracts/' as *;
+@use '../tools/screen';
+body {
   overflow-x: auto;
   overflow-y: auto;
-  @include screen.larger-than(sm){
+  @include screen.larger-than(sm) {
     overflow-x: hidden;
     overflow-y: hidden;
   }
 }
-.app{
+.app {
   display: grid;
   width: calc(100vw - 15px);
   grid-template-rows: 10px min-content min-content min-content 10px;
@@ -16,75 +16,62 @@ body{
   gap: space(4);
 
   grid-template-columns: 1fr;
-  grid-template-areas: 
-    "header"
-    "form"
-    "info"
-    "list"
-    "footer";
+  grid-template-areas:
+    'header'
+    'form'
+    'info'
+    'list'
+    'footer';
 
-  
-  @include screen.larger-than(sm){
+  @include screen.larger-than(sm) {
     height: 100vh;
     width: 100vw;
     overflow-x: hidden;
     overflow-y: hidden;
-    grid-template-rows: 10px minmax(10px, 1fr) minmax(10px, 1fr)  10px;
+    grid-template-rows: 10px minmax(10px, 1fr) minmax(10px, 1fr) 10px;
     grid-template-columns: 360px minmax(10px, 1fr);
-    grid-template-areas: 
-      "header header"
-      "form list"
-      "info info"
-      "footer footer";
+    grid-template-areas:
+      'header header'
+      'form list'
+      'info info'
+      'footer footer';
   }
 
-  @include screen.larger-than(md){
+  @include screen.larger-than(md) {
     grid-template-columns: 360px minmax(10px, 1fr);
     grid-template-rows: 10px minmax(10px, 2fr) minmax(10px, 1fr) 10px;
-    grid-template-areas: 
-      "header header"
-      "form info"
-      "form list"
-      "footer footer";
+    grid-template-areas:
+      'header header'
+      'form info'
+      'form list'
+      'footer footer';
     overflow-x: hidden;
     overflow-y: hidden;
   }
-  @include screen.larger-than(lg){
+  @include screen.larger-than(lg) {
     grid-template-columns: 360px minmax(10px, 1fr) 360px;
     grid-template-rows: 10px minmax(10px, 1fr) 10px;
-    grid-template-areas: 
-      "header header header"
-      "form info list"
-      "footer footer footer";
+    grid-template-areas:
+      'header header header'
+      'form info list'
+      'footer footer footer';
     overflow-x: hidden;
     overflow-y: hidden;
   }
-  &__header{
+  &__header {
     grid-area: header;
   }
-  &__form{
+  &__form {
     grid-area: form;
     max-width: 360px;
   }
-  &__info{
+  &__info {
     grid-area: info;
   }
-  &__powerlist{
+  &__powerlist {
     grid-area: list;
   }
-  &__powerlist-control{
-    display: flex;
-    justify-content: space-between;
-    padding: space(4) space(2)
-  }
-  &__poweritem{
-    cursor: pointer;
-    display: flex;
-    gap: space(4);
-    margin-top: space(1);
-    margin-right: space(4);
-  }
-  &__footer{
+  &__footer {
     grid-area: footer;
   }
 }

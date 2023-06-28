@@ -1,0 +1,37 @@
+@use '../../style/abstracts/' as *;
+
+.dice {
+  display: flex;
+  gap: space(2);
+  margin-bottom: space(2);
+  input {
+    width: 100px;
+    margin-right: space(2);
+  }
+}
+
+.calculator {
+  border-collapse: collapse;
+}
+
+.row {
+  // border-bottom border-color--primary
+  border-bottom: 1px solid $border-color-primary;
+}
+.cellBorder {
+  // border-left border-color--primary
+  border-left: 1px solid $border-color-primary;
+}
+.cell {
+  padding-left: space(2);
+  padding-right: space(2);
+}
+
+.headerRow {
+  // border-bottom border-color--primary border-bottom--thick
+  border-bottom: 2px solid $border-color-primary;
+}
+.headerCol {
+  // border-left border-color--primary border-left--thick
+  border-right: 2px solid $border-color-primary;
+}

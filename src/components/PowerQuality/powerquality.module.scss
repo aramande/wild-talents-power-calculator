@@ -1,0 +1,17 @@
+@use '../../style/abstracts/' as *;
+
+.powerquality {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  margin-bottom: space(4);
+}
+.row {
+  display: flex;
+  gap: space(2);
+}
+.name {
+  cursor: help;
+  margin: 0;
+  width: auto;
+}
