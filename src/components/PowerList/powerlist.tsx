@@ -9,6 +9,7 @@ import TextboxModal from '../../modals/textbox.modal';
 import { ReactTags, Tag, TagSuggestion } from 'react-tag-autocomplete';
 import { contains } from '../../helpers/contains';
 import style from './powerlist.module.scss';
+import useModal from '../../hooks/useModal';
 
 interface PowerListProps {
   savedPowers: IPowerRegistry;
@@ -20,10 +21,11 @@ interface PowerListProps {
 const PowerList: React.FC<PowerListProps> = (props) => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [openConfirmRemove, setOpenConfirmRemove] = useState<boolean>(false);
-  const [openExport, setOpenExport] = useState<string | undefined>(undefined);
-  const [openImport, setOpenImport] = useState<boolean>(false);
   const [selectedPower, setSelectedPower] = useState<string[]>([]);
   const [visiblePowers, setVisiblePowers] = useState<[string, Power][]>([]);
+
+  const [openExport, setOpenExport] = useState<string | undefined>(undefined);
+  const [openImport, setOpenImport] = useModal();
 
   useEffect(() => {
     const filteredPowers = Object.entries(props.savedPowers).filter(([, power]) => contains(power.tags, tags));

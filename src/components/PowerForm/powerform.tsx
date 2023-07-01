@@ -20,8 +20,8 @@ interface PowerFormProps {
 
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [name, setName] = useState<string>('Undefined Power');
-  const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
   const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
   const [editQualityModalOpen, toggleEditQualityModal] = useModal();
