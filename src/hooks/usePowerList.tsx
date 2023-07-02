@@ -141,18 +141,15 @@ export function usePowerList(): [IPowerRegistry, React.Dispatch<PowerListActions
 
   useEffect(() => {
     const newTagSuggestions: TagSuggestion[] = [];
-    try {
-      const savedTags = Object.values(powers).map((x) => x.tags);
-      for (const tagGroups of savedTags) {
-        for (const tag of tagGroups) {
-          if (!newTagSuggestions.find((x) => x.value === tag.value)) {
-            newTagSuggestions.push(tag);
-          }
+    const savedTags = Object.values(powers ?? {}).map((x) => x.tags);
+    for (const tagGroups of savedTags) {
+      for (const tag of tagGroups) {
+        if (!newTagSuggestions.find((x) => x.value === tag.value)) {
+          newTagSuggestions.push(tag);
         }
       }
-    } finally {
-      setTagSuggestions(newTagSuggestions);
     }
+    setTagSuggestions(newTagSuggestions);
   }, [powers, setTagSuggestions]);
 
   return [powers, dispatch, tagSuggestions];
