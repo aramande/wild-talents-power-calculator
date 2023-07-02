@@ -63,31 +63,24 @@ const CapacityCalc: React.FC<CapacityCalcProps> = ({ quality }) => {
   const speedCapacity = new Capacity('Speed', state, state.maxSpeed ? rangeDice + massDice : speedDice);
 
   function isOnlyMass(): boolean {
-    // return state.mass && !state.maxMass && (!state.range || state.maxRange) && (!state.speed || state.maxSpeed);
     return state.mass && !state.range && !state.speed;
   }
   function isOnlyRange(): boolean {
-    // return (!state.mass || state.maxMass) && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
     return !state.mass && state.range && !state.speed;
   }
   function isOnlySpeed(): boolean {
-    // return (!state.mass || state.maxMass) && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
     return !state.mass && !state.range && state.speed;
   }
   function isRangeAndSpeed(): boolean {
-    // return (!state.mass || state.maxMass) && state.range && !state.maxRange && state.speed && !state.maxSpeed;
     return !state.mass && state.range && state.speed;
   }
   function isMassAndRange(): boolean {
-    // return state.mass && !state.maxMass && state.range && !state.maxRange && (!state.speed || state.maxSpeed);
     return state.mass && state.range && !state.speed;
   }
   function isMassAndSpeed(): boolean {
-    // return state.mass && !state.maxMass && (!state.range || state.maxRange) && state.speed && !state.maxSpeed;
     return state.mass && !state.range && state.speed;
   }
   function isAll(): boolean {
-    // return state.mass && !state.maxMass && state.range && !state.maxRange && state.speed && !state.maxRange;
     return state.mass && state.range && state.speed;
   }
 

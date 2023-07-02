@@ -9,6 +9,7 @@ import TextboxModal from '../../modals/textbox.modal';
 import { ReactTags, Tag, TagSuggestion } from 'react-tag-autocomplete';
 import { contains } from '../../helpers/contains';
 import style from './powerlist.module.scss';
+import useModal from '../../hooks/useModal';
 
 interface PowerListProps {
   savedPowers: IPowerRegistry;
@@ -20,10 +21,12 @@ interface PowerListProps {
 const PowerList: React.FC<PowerListProps> = (props) => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [openConfirmRemove, setOpenConfirmRemove] = useState<boolean>(false);
-  const [openExport, setOpenExport] = useState<string | undefined>(undefined);
-  const [openImport, setOpenImport] = useState<boolean>(false);
   const [selectedPower, setSelectedPower] = useState<string[]>([]);
   const [visiblePowers, setVisiblePowers] = useState<[string, Power][]>([]);
+  const [allSelected, setAllSelected] = useState<boolean>(false);
+
+  const [openExport, setOpenExport] = useState<string | undefined>(undefined);
+  const [openImport, setOpenImport] = useModal();
 
   useEffect(() => {
     const filteredPowers = Object.entries(props.savedPowers).filter(([, power]) => contains(power.tags, tags));
@@ -49,6 +52,13 @@ const PowerList: React.FC<PowerListProps> = (props) => {
     setSelectedPower((prev) => {
       if (prev.indexOf(name) >= 0) return prev.filter((x) => x !== name);
       return [...prev, name];
+    });
+  }
+  function toggleSelectAllPowers() {
+    setAllSelected((selected) => {
+      if (!selected) setSelectedPower(visiblePowers.map((x) => x[0]));
+      else setSelectedPower([]);
+      return !selected;
     });
   }
   function exportSelected(): void {
@@ -115,6 +125,9 @@ const PowerList: React.FC<PowerListProps> = (props) => {
         );
       })}
       <div className={style.control}>
+        <button className="btn btn--neutral" onClick={() => toggleSelectAllPowers()}>
+          <i className={`fa-solid ${allSelected ? 'fa-square-check' : 'fa-square'}`}></i>
+        </button>
         <Button className="btn--neutral" onClick={() => exportSelected()}>
           <i className="fa-solid fa-download"></i> Export
         </Button>
