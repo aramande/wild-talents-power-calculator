@@ -4,7 +4,7 @@ import { Action } from '../helpers/Reducer';
 import { IPowerModifier, IPowerQuality } from '../interfaces/power.interface';
 import { Tag, TagSuggestion } from 'react-tag-autocomplete';
 
-export interface IPowerRegistry{
+export interface IPowerRegistry {
   [key: string]: Power;
 }
 export class Power {
@@ -16,22 +16,31 @@ export class Power {
     this.tags = tags ?? [];
   }
 
-  static export(power: Power): string{
-    function printQuality(quality: IPowerQuality): string{
-      let result = `${quality.ref};${quality.name};${quality.specific ?? ''};${quality.multiplier};${quality.capacity};${quality.cost};${quality.emulatedPower?'emu':'no'}`;
+  static export(power: Power): string {
+    function printQuality(quality: IPowerQuality): string {
+      let result = `${quality.ref};${quality.name};${quality.specific ?? ''};${quality.multiplier};${
+        quality.capacity
+      };${quality.cost};${quality.emulatedPower ? 'emu' : 'no'}`;
       for (const modifier of quality.modifiers) {
-        result += `;~${modifier.ref};${modifier.name};${modifier.specific ?? ''};${modifier.multiplier};${modifier.cost};${modifier.focus?'foc':'no'}`
+        result += `;~${modifier.ref};${modifier.name};${modifier.specific ?? ''};${modifier.multiplier};${
+          modifier.cost
+        };${modifier.focus ? 'foc' : 'no'}`;
       }
       return result;
     }
-    return `1;~~${power.tags.map(x => x.value).join(';')};~~${power.qualities.map(x => printQuality(x)).join(';~~')}`;
+    return `1;~~${power.tags.map((x) => x.value).join(';')};~~${power.qualities
+      .map((x) => printQuality(x))
+      .join(';~~')}`;
   }
 
-  static import(content: string): Power{
+  static import(content: string): Power {
     try {
-      if(content.startsWith('1;')){
+      if (content.startsWith('1;')) {
         const parts = content.split(';~~');
-        const tags = parts[1].split(';').filter(x => x).map(x => ({value: x, label: x}));
+        const tags = parts[1]
+          .split(';')
+          .filter((x) => x)
+          .map((x) => ({ value: x, label: x }));
         const qualities: IPowerQuality[] = [];
         for (let i = 2; i < parts.length; i++) {
           const newQuality = parts[i];
@@ -41,55 +50,55 @@ export class Power {
           for (let k = 1; k < sections.length; k++) {
             const modifierParts = sections[k].split(';');
             const modifier: IPowerModifier = {
-              ref: modifierParts[0], 
-              name: modifierParts[1], 
+              ref: modifierParts[0],
+              name: modifierParts[1],
               specific: modifierParts[2],
               multiplier: parseInt(modifierParts[3]),
               cost: parseInt(modifierParts[4]),
               focus: modifierParts[5] === 'foc',
-            }
+            };
             modifiers.push(modifier);
           }
           const quality: IPowerQuality = {
-            ref: qualityParts[0], 
-            name: qualityParts[1], 
+            ref: qualityParts[0],
+            name: qualityParts[1],
             specific: qualityParts[2],
             multiplier: parseInt(qualityParts[3]),
             capacity: qualityParts[4] as any,
             cost: parseInt(qualityParts[5]),
             emulatedPower: qualityParts[6] === 'emu',
-            modifiers: modifiers
+            modifiers: modifiers,
           };
           qualities.push(quality);
         }
         return new Power(qualities, tags);
       }
-      
-    }
-    catch(error) {
+    } catch (error) {
       //error handling here?
       console.error(error);
     }
     return new Power();
   }
-
 }
 export enum PowerListActionKind {
   UPDATE_POWER_OBJ = 'update-power-obj',
   UPDATE_POWER = 'update-power',
   DEL_POWER = 'del-power',
 }
-type UpdatePowerObjAction = Action<typeof PowerListActionKind.UPDATE_POWER_OBJ, {name: string, power: Power}>;
+type UpdatePowerObjAction = Action<typeof PowerListActionKind.UPDATE_POWER_OBJ, { name: string; power: Power }>;
 function reduceUpdatePowerObjAction(state: IPowerRegistry, action: UpdatePowerObjAction): IPowerRegistry {
   if (!action.payload) return state;
-  const newState: IPowerRegistry = {...state};
+  const newState: IPowerRegistry = { ...state };
   newState[action.payload.name] = action.payload.power;
   return newState;
 }
-type UpdatePowerAction = Action<typeof PowerListActionKind.UPDATE_POWER, {name: string, qualities: IPowerQuality[], tags: Tag[]}>;
+type UpdatePowerAction = Action<
+  typeof PowerListActionKind.UPDATE_POWER,
+  { name: string; qualities: IPowerQuality[]; tags: Tag[] }
+>;
 function reduceUpdatePowerAction(state: IPowerRegistry, action: UpdatePowerAction): IPowerRegistry {
   if (!action.payload) return state;
-  const newState: IPowerRegistry = {...state};
+  const newState: IPowerRegistry = { ...state };
   newState[action.payload.name] = new Power(action.payload.qualities, action.payload.tags);
   return newState;
 }
@@ -99,7 +108,7 @@ function reduceDeletePowerAction(state: IPowerRegistry, action: DelPowerAction):
   //delete state[action.payload];
   const newState: IPowerRegistry = {};
   for (const [name, qualities] of Object.entries(state)) {
-    if(name !== action.payload){
+    if (name !== action.payload) {
       newState[name] = qualities;
     }
   }
@@ -124,23 +133,26 @@ function powerListReducer(state: IPowerRegistry, action: PowerListActions): IPow
 export function usePowerList(): [IPowerRegistry, React.Dispatch<PowerListActions>, TagSuggestion[]] {
   const [powerListStorage, setPowerListStorage] = useLocalStorage<IPowerRegistry>('powerlist', {});
   const [powers, dispatch] = useReducer(powerListReducer, powerListStorage);
-  const [tagSuggestions, setTagSuggestions] = useState<TagSuggestion[]>([])
+  const [tagSuggestions, setTagSuggestions] = useState<TagSuggestion[]>([]);
 
   useEffect(() => {
     setPowerListStorage((c) => powers);
   }, [powers, setPowerListStorage]);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     const newTagSuggestions: TagSuggestion[] = [];
-    const savedTags = Object.values(powers).map(x => x.tags);
-    for (const tagGroups of savedTags) {
-      for (const tag of tagGroups) {
-        if(!newTagSuggestions.find(x => x.value === tag.value)){
-          newTagSuggestions.push(tag);
+    try {
+      const savedTags = Object.values(powers).map((x) => x.tags);
+      for (const tagGroups of savedTags) {
+        for (const tag of tagGroups) {
+          if (!newTagSuggestions.find((x) => x.value === tag.value)) {
+            newTagSuggestions.push(tag);
+          }
         }
       }
+    } finally {
+      setTagSuggestions(newTagSuggestions);
     }
-    setTagSuggestions(newTagSuggestions);
   }, [powers, setTagSuggestions]);
 
   return [powers, dispatch, tagSuggestions];
