@@ -96,6 +96,12 @@ const PowerList: React.FC<PowerListProps> = (props) => {
     setSelectedPower([]);
     setOpenConfirmRemove(false);
   }
+  function setPower(name: string, power: Power) {
+    for (const quality of power.qualities) {
+      if (quality.type === undefined) quality.type = quality.emulatedPower ? 'emulated' : 'normal';
+    }
+    props.setPower(name, power);
+  }
 
   return (
     <>
@@ -118,7 +124,7 @@ const PowerList: React.FC<PowerListProps> = (props) => {
               checked={selectedPower.indexOf(name) >= 0}
               onChange={() => selectPower(name)}
             />
-            <span onClick={() => props.setPower(name, power)}>
+            <span onClick={() => setPower(name, power)}>
               <strong>{name}</strong> ({cost}/{cost * 2}/{cost * 4})
             </span>
           </div>
