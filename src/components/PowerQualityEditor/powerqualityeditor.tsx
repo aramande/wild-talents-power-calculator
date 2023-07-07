@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity } from '../../interfaces/power.interface';
+import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity, TType } from '../../interfaces/power.interface';
 import { getDescription } from '../../helpers/get-description';
 import { Modifiers, getDisplayCost } from '../../helpers/get-modifiers';
 import { PowerQualityActionKind, usePowerQuality } from '../../hooks/usePowerQuality';
@@ -78,8 +78,11 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
     const bCost = b.cost > 0 ? b.cost + 10 : -b.cost;
     return bCost - aCost;
   }
-  function setEmulatedPower(state: boolean) {
-    dispatch(createAction(PowerQualityActionKind.SET_EMULATED, state));
+  // function setEmulatedPower(state: boolean) {
+  //   dispatch(createAction(PowerQualityActionKind.SET_EMULATED, state));
+  // }
+  function setPowerType(state: TType) {
+    dispatch(createAction(PowerQualityActionKind.SET_POWER_TYPE, state));
   }
 
   function isActive(value: string | undefined, expected: string) {
@@ -183,16 +186,21 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
           />
         </div>
         <div className="spaceabove--1">
-          <input
-            type="checkbox"
-            id="emulated-power"
-            checked={quality.emulatedPower}
-            onChange={(e) => setEmulatedPower(e.target.checked)}
-          />{' '}
-          <label htmlFor="emulated-power">Emulated power</label>
+          <label htmlFor="power-type">Type</label>
+          <select
+            name="power-type"
+            id="power-type"
+            onChange={(e) => setPowerType(e.currentTarget.value as TType)}
+            defaultValue={quality.type}
+          >
+            <option value="normal">Normal</option>
+            <option value="emulated">Emulated</option>
+            <option value="hyperstat">HyperStat</option>
+            <option value="hyperskill">HyperSkill</option>
+          </select>
         </div>
         <div className="spaceabove--1">
-          Standard {quality.emulatedPower ? 'willpower' : 'die'} cost: {QualityHelper.calculateCost(quality)}
+          Standard {quality.type === 'emulated' ? 'willpower' : 'die'} cost: {QualityHelper.calculateCost(quality)}
         </div>
         <div className="spaceabove--1">Capacities: {QualityHelper.getCapacities(quality).join(', ')}</div>
 

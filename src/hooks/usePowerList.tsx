@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { Action } from '../helpers/Reducer';
-import { IPowerModifier, IPowerQuality } from '../interfaces/power.interface';
+import { IPowerModifier, IPowerQuality, TType } from '../interfaces/power.interface';
 import { Tag, TagSuggestion } from 'react-tag-autocomplete';
 
 export interface IPowerRegistry {
@@ -20,7 +20,7 @@ export class Power {
     function printQuality(quality: IPowerQuality): string {
       let result = `${quality.ref};${quality.name};${quality.specific ?? ''};${quality.multiplier};${
         quality.capacity
-      };${quality.cost};${quality.emulatedPower ? 'emu' : 'no'}`;
+      };${quality.cost};${printType(quality.type)}`;
       for (const modifier of quality.modifiers) {
         result += `;~${modifier.ref};${modifier.name};${modifier.specific ?? ''};${modifier.multiplier};${
           modifier.cost
@@ -66,7 +66,8 @@ export class Power {
             multiplier: parseInt(qualityParts[3]),
             capacity: qualityParts[4] as any,
             cost: parseInt(qualityParts[5]),
-            emulatedPower: qualityParts[6] === 'emu',
+            // emulatedPower: qualityParts[6] === 'emu',
+            type: parseType(qualityParts[6]),
             modifiers: modifiers,
           };
           qualities.push(quality);
@@ -156,4 +157,28 @@ export function usePowerList(): [IPowerRegistry, React.Dispatch<PowerListActions
   }, [powers, setTagSuggestions]);
 
   return [powers, dispatch, tagSuggestions];
+}
+function parseType(type: string): TType {
+  switch (type) {
+    case 'emu':
+      return 'emulated';
+    case 'stat':
+      return 'hyperstat';
+    case 'skill':
+      return 'hyperskill';
+    default:
+      return 'normal';
+  }
+}
+function printType(type: TType): string {
+  switch (type) {
+    case 'emulated':
+      return 'emu';
+    case 'hyperstat':
+      return 'stat';
+    case 'hyperskill':
+      return 'skill';
+    default:
+      return 'no';
+  }
 }
