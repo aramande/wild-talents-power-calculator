@@ -53,7 +53,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
       };
       dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
     } else {
-      found.multiplier = found.multiplier + 1;
+      found.multiplier = found.multiplier + multiplier;
     }
     setMultiplier(1);
     setSpecific('');
