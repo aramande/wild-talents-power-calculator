@@ -77,7 +77,11 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setTags((x) => [...x, tag]);
   }
   function deleteTag(index: number) {
-    setTags((x) => x.splice(index, 1));
+    setTags((x) => {
+      const copy = x.slice();
+      copy.splice(index, 1);
+      return copy;
+    });
   }
 
   return (
