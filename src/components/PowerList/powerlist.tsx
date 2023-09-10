@@ -29,7 +29,9 @@ const PowerList: React.FC<PowerListProps> = (props) => {
   const [openImport, setOpenImport] = useModal();
 
   useEffect(() => {
-    const filteredPowers = Object.entries(props.savedPowers).filter(([, power]) => contains(power.tags, tags));
+    const filteredPowers = Object.entries(props.savedPowers).filter(([, power]) => contains(power.tags, tags, (a, b) => {
+      return a.value === b.value;
+    }));
     setVisiblePowers(filteredPowers);
   }, [props.savedPowers, tags, setVisiblePowers]);
 
