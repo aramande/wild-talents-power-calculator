@@ -4,7 +4,7 @@ const lookup: {[key: string]: string[]} = {
     'With the Attacks quality, you can attack things with your power. Roll its dice like any other attack, using height to determine hit location. It inflicts width in Shock and Killing damage. Without the Attacks quality, you can\'t use your power to attack.',
     'If your power has the Attacks quality, each additional Attacks level adds +1 damage to successful attacks.'
   ],
-  defends: [
+  defend: [
     'With the Defends quality, you can defend yourself with your power. Roll its dice like any other defense roll, with height and width determining which dice it can gobble from attacks against you. Without the Defends quality, you can\'t use your power to defend.',
     'If it has the Defends quality, each additional Defends level adds one gobble die to a successful defense, using the height and width of the defense roll.'
   ],
