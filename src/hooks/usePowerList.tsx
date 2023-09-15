@@ -10,10 +10,12 @@ export interface IPowerRegistry {
 export class Power {
   qualities: IPowerQuality[];
   tags: Tag[];
+  desc: string;
 
-  constructor(qualities?: IPowerQuality[], tags?: Tag[]) {
+  constructor(qualities?: IPowerQuality[], tags?: Tag[], desc?: string) {
     this.qualities = qualities ?? [];
     this.tags = tags ?? [];
+    this.desc = desc ?? '';
   }
 
   static export(power: Power): string {
@@ -28,7 +30,7 @@ export class Power {
       }
       return result;
     }
-    return `1;~~${power.tags.map((x) => x.value).join(';')};~~${power.qualities
+    return `2;~~${power.tags.map((x) => x.value).join(';')};~~${power.desc};~~${power.qualities
       .map((x) => printQuality(x))
       .join(';~~')}`;
   }
@@ -36,49 +38,96 @@ export class Power {
   static import(content: string): Power {
     try {
       if (content.startsWith('1;')) {
-        const parts = content.split(';~~');
-        const tags = parts[1]
-          .split(';')
-          .filter((x) => x)
-          .map((x) => ({ value: x, label: x }));
-        const qualities: IPowerQuality[] = [];
-        for (let i = 2; i < parts.length; i++) {
-          const newQuality = parts[i];
-          const sections = newQuality.split(';~');
-          const qualityParts = sections[0].split(';');
-          const modifiers: IPowerModifier[] = [];
-          for (let k = 1; k < sections.length; k++) {
-            const modifierParts = sections[k].split(';');
-            const modifier: IPowerModifier = {
-              ref: modifierParts[0],
-              name: modifierParts[1],
-              specific: modifierParts[2],
-              multiplier: parseInt(modifierParts[3]),
-              cost: parseInt(modifierParts[4]),
-              focus: modifierParts[5] === 'foc',
-            };
-            modifiers.push(modifier);
-          }
-          const quality: IPowerQuality = {
-            ref: qualityParts[0],
-            name: qualityParts[1],
-            specific: qualityParts[2],
-            multiplier: parseInt(qualityParts[3]),
-            capacity: qualityParts[4] as any,
-            cost: parseInt(qualityParts[5]),
-            // emulatedPower: qualityParts[6] === 'emu',
-            type: parseType(qualityParts[6]),
-            modifiers: modifiers,
-          };
-          qualities.push(quality);
-        }
-        return new Power(qualities, tags);
+        return Power.importV1(content);
+      }
+      else if (content.startsWith('2;')) {
+        return Power.importV2(content);
       }
     } catch (error) {
       //error handling here?
       console.error(error);
     }
     return new Power();
+  }
+  
+  static importV2(content: string): Power {
+    const parts = content.split(';~~');
+    const tags = parts[1]
+      .split(';')
+      .filter((x) => x)
+      .map((x) => ({ value: x, label: x }));
+    const desc = parts[2]
+    const qualities: IPowerQuality[] = [];
+    for (let i = 3; i < parts.length; i++) {
+      const newQuality = parts[i];
+      const sections = newQuality.split(';~');
+      const qualityParts = sections[0].split(';');
+      const modifiers: IPowerModifier[] = [];
+      for (let k = 1; k < sections.length; k++) {
+        const modifierParts = sections[k].split(';');
+        const modifier: IPowerModifier = {
+          ref: modifierParts[0],
+          name: modifierParts[1],
+          specific: modifierParts[2],
+          multiplier: parseInt(modifierParts[3]),
+          cost: parseInt(modifierParts[4]),
+          focus: modifierParts[5] === 'foc',
+        };
+        modifiers.push(modifier);
+      }
+      const quality: IPowerQuality = {
+        ref: qualityParts[0],
+        name: qualityParts[1],
+        specific: qualityParts[2],
+        multiplier: parseInt(qualityParts[3]),
+        capacity: qualityParts[4] as any,
+        cost: parseInt(qualityParts[5]),
+        // emulatedPower: qualityParts[6] === 'emu',
+        type: parseType(qualityParts[6]),
+        modifiers: modifiers,
+      };
+      qualities.push(quality);
+    }
+    return new Power(qualities, tags, desc);
+  }
+  static importV1(content: string): Power {
+    const parts = content.split(';~~');
+    const tags = parts[1]
+      .split(';')
+      .filter((x) => x)
+      .map((x) => ({ value: x, label: x }));
+    const qualities: IPowerQuality[] = [];
+    for (let i = 2; i < parts.length; i++) {
+      const newQuality = parts[i];
+      const sections = newQuality.split(';~');
+      const qualityParts = sections[0].split(';');
+      const modifiers: IPowerModifier[] = [];
+      for (let k = 1; k < sections.length; k++) {
+        const modifierParts = sections[k].split(';');
+        const modifier: IPowerModifier = {
+          ref: modifierParts[0],
+          name: modifierParts[1],
+          specific: modifierParts[2],
+          multiplier: parseInt(modifierParts[3]),
+          cost: parseInt(modifierParts[4]),
+          focus: modifierParts[5] === 'foc',
+        };
+        modifiers.push(modifier);
+      }
+      const quality: IPowerQuality = {
+        ref: qualityParts[0],
+        name: qualityParts[1],
+        specific: qualityParts[2],
+        multiplier: parseInt(qualityParts[3]),
+        capacity: qualityParts[4] as any,
+        cost: parseInt(qualityParts[5]),
+        // emulatedPower: qualityParts[6] === 'emu',
+        type: parseType(qualityParts[6]),
+        modifiers: modifiers,
+      };
+      qualities.push(quality);
+    }
+    return new Power(qualities, tags);
   }
 }
 export enum PowerListActionKind {

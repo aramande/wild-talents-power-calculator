@@ -12,6 +12,7 @@ import styles from './powerform.module.scss';
 
 interface PowerFormProps {
   name?: string;
+  desc?: string;
   power?: Power;
   tagSuggestions: TagSuggestion[];
   showInfo: (info: IPowerItem) => void;
@@ -21,6 +22,7 @@ interface PowerFormProps {
 const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [name, setName] = useState<string>('Undefined Power');
   const [tags, setTags] = useState<Tag[]>([]);
+  const [desc, setDesc] = useState<string>('');
   const [powerQualities, setPowerQualities] = useState<IPowerQuality[]>([]);
   const [editTarget, setEditTarget] = useState<IPowerQuality | undefined>(undefined);
   const [addQualityModalOpen, toggleAddQualityModal] = useModal();
@@ -28,11 +30,13 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
 
   useEffect(() => {
     if (props.name) setName(props.name);
+    if (props.desc) setDesc(props.desc);
     if (props.power) {
       setPowerQualities(props.power.qualities);
       setTags(props.power.tags);
+      setDesc(props.power.desc ?? '');
     }
-  }, [props.name, props.power]);
+  }, [props.name, props.power, props.desc]);
 
   function closeAddQualityModal() {
     toggleAddQualityModal(false);
@@ -66,7 +70,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setPowerQualities((qualities) => qualities.map((x) => (x.ref === result.ref ? result : x)));
   }
   function savePower(): void {
-    const power = new Power(powerQualities, tags);
+    const power = new Power(powerQualities, tags, desc);
     props.onSavePower(name, power);
   }
   function clearPower(): void {
@@ -94,6 +98,12 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
       <div className={styles.dicecost}>
         ({totalCost}/{totalCost * 2}/{totalCost * 4})
       </div>
+      <textarea 
+        placeholder={"Description..."}
+        onChange={(e) => setDesc(e.target.value)}
+        value={desc}
+        style={{resize: 'vertical'}} />
+      
       <ReactTags
         selected={tags}
         suggestions={props.tagSuggestions}

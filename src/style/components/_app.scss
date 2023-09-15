@@ -64,6 +64,10 @@ body {
   &__form {
     grid-area: form;
     max-width: 360px;
+
+    @include screen.larger-than(sm) {
+      overflow-y: auto;
+    }
   }
   &__info {
     grid-area: info;
@@ -78,4 +82,8 @@ body {
   &__footer {
     grid-area: footer;
   }
+}
+
+.react-tags{
+  height: 44px;
 }

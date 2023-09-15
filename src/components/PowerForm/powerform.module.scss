@@ -3,7 +3,7 @@
 .powerform {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(3, min-content) minmax(10px, 1fr) repeat(2, min-content);
+  grid-template-rows: repeat(4, min-content) minmax(10px, 1fr) repeat(2, min-content);
   max-height: 100%;
 }
 .dicecost {
@@ -28,3 +28,4 @@
   top: space(1);
   right: space(1);
 }
+
