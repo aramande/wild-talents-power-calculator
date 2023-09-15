@@ -70,6 +70,10 @@ body {
   }
   &__powerlist {
     grid-area: list;
+    
+    @include screen.larger-than(sm) {
+      overflow-y: auto;
+    }
   }
   &__footer {
     grid-area: footer;
