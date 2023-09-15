@@ -76,6 +76,8 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   function clearPower(): void {
     setName('Undefined Power');
     setPowerQualities([]);
+    setTags([]);
+    setDesc('');
   }
   function addTag(tag: Tag) {
     setTags((x) => [...x, tag]);
