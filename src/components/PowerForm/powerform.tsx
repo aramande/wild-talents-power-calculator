@@ -10,11 +10,11 @@ import QualityHelper from '../../helpers/Quality.helper';
 import { Power } from '../../hooks/usePowerList';
 import { ReactTags, Tag, TagSuggestion } from 'react-tag-autocomplete';
 import styles from './powerform.module.scss';
+import { PowerDef } from '../../App';
 
 interface PowerFormProps {
-  name?: string;
   desc?: string;
-  power?: Power;
+  data?: PowerDef;
   tagSuggestions: TagSuggestion[];
   showInfo: (info: IPowerItem) => void;
   onSavePower: (name: string, power: Power) => void;
@@ -33,36 +33,33 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
 
   const toOverwrite = useRef<PowerFormProps|undefined>();
   useEffect(() => {
-    if (dirty && props.name !== name) {
+    const data = props.data;
+    if (dirty) {
       toOverwrite.current = props
       toggleUnsavedChangesModal(true);
     }
     else {
-      if (props.name) setName(props.name);
       if (props.desc) setDesc(props.desc);
-      if (props.power) {
-        setPowerQualities(props.power.qualities);
-        setTags(props.power.tags);
-        setDesc(props.power.desc ?? '');
+      if (data) {
+        setName(data.name);
+        setPowerQualities(data.power.qualities);
+        setTags(data.power.tags);
+        setDesc(data.power.desc ?? '');
       }
     }
-  }, [props.name, props.power, props.desc]);
-  useEffect(() => {
-    
-    if(desc !== undefined && desc.length !== 0 && desc !== props.desc) setDirty(true);
-  }, [desc, props.desc]);
-  
+  }, [props.data, props.desc]);
 
   function overwriteChanges(){
     toggleUnsavedChangesModal(false);
     if (!toOverwrite.current) return;
     const prop = toOverwrite.current;
-    if (prop.name) setName(prop.name);
+    const data = props.data;
     if (prop.desc) setDesc(prop.desc);
-    if (prop.power) {
-      setPowerQualities(prop.power.qualities);
-      setTags(prop.power.tags);
-      setDesc(prop.power.desc ?? '');
+    if (data) {
+      setName(data?.name);
+      setPowerQualities(data.power.qualities);
+      setTags(data.power.tags);
+      setDesc(data.power.desc ?? '');
     }
     toOverwrite.current = undefined;
     setDirty(false);
@@ -108,16 +105,18 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   }
   function clearPower(): void {
     toOverwrite.current = {
-      name: 'Undefined Power', 
+      data: {
+        name: 'Undefined Power', 
+        power: {
+          qualities: [], 
+          tags: [], 
+          desc: ''
+        }
+      },
       desc: '', 
       tagSuggestions: props.tagSuggestions,
       showInfo: props.showInfo,
       onSavePower: props.onSavePower,
-      power: {
-        qualities: [], 
-        tags: [], 
-        desc: ''
-      }
     };
     if(dirty) {
       toggleUnsavedChangesModal(true); 
@@ -149,6 +148,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
       <textarea 
         placeholder={"Description..."}
         onChange={(e) => setDesc(e.target.value)}
+        onInput={() => setDirty(true)}
         value={desc}
         style={{resize: 'vertical'}} />
       

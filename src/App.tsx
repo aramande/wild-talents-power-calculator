@@ -6,26 +6,28 @@ import { Power, PowerListActionKind, usePowerList } from './hooks/usePowerList';
 import { createAction } from './helpers/Reducer';
 import PowerList from './components/PowerList/powerlist';
 
+export interface PowerDef {
+  name: string;
+  power: Power;
+}
+
 function App() {
   const [info, setInfo] = useState<IPowerItem>();
   const [savedPowers, setSavedPower, tagSuggestions] = usePowerList();
-  const [name, setName] = useState<string | undefined>(undefined);
-  const [power, setPowerState] = useState<Power | undefined>(undefined);
+  const [powerForm, setPowerForm] = useState<PowerDef>();
 
   function savePower(name: string, power: Power): void {
     setSavedPower(createAction(PowerListActionKind.UPDATE_POWER_OBJ, { name: name, power: power }));
   }
-  function setPower(name: string, power: Power): void {
-    setName(name);
-    setPowerState(power);
+  function setPower(newName: string, newPower: Power): void {
+    setPowerForm({name: newName, power: newPower});
   }
   return (
     <div className="app">
       <header className="app__header"></header>
       <section className="app__form">
         <PowerForm
-          name={name}
-          power={power}
+          data={powerForm}
           tagSuggestions={tagSuggestions}
           showInfo={setInfo}
           onSavePower={savePower}

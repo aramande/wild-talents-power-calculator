@@ -27,7 +27,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = (props) => {
   function onConfirm(){
     props.onConfirm();
   }
-  const message = typeof props.message === 'string' ? (<p>{props.message}</p>) : props.message.map(x => (<p>{x}</p>)); 
+  const message = typeof props.message === 'string' ? (<p key='1'>{props.message}</p>) : props.message.map((x,i) => (<p key={i}>{x}</p>)); 
   return (
     <Modal
       show={props.show}
