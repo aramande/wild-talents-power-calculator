@@ -31,6 +31,21 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
   const [editQualityModalOpen, toggleEditQualityModal] = useModal();
   const [unsavedChangesModalOpen, toggleUnsavedChangesModal ] = useModal();
 
+  useEffect(() => {
+    if(dirty){
+      window.onbeforeunload = function() {
+        return true;
+      };
+    }
+    else{
+      window.onbeforeunload = null;
+    }
+    return () => {
+      window.onbeforeunload = null;
+    };
+  
+  }, [dirty]);
+
   const toOverwrite = useRef<PowerFormProps|undefined>();
   useEffect(() => {
     const data = props.data;
