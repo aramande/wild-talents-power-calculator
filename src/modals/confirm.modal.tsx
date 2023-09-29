@@ -3,8 +3,9 @@ import { Button, Modal } from 'react-bootstrap';
 
 interface ConfirmModalProps {
   header: string;
-  message: string;
+  message: string | string[];
   show: boolean;
+  width?: string;
   cancelButton?: string;
   denyButton?: string;
   confirmButton?: string;
@@ -26,18 +27,21 @@ const ConfirmModal: React.FC<ConfirmModalProps> = (props) => {
   function onConfirm(){
     props.onConfirm();
   }
+  const message = typeof props.message === 'string' ? (<p>{props.message}</p>) : props.message.map(x => (<p>{x}</p>)); 
   return (
     <Modal
       show={props.show}
       onHide={() => onCancel()}>
-      <Modal.Dialog>
+      <Modal.Dialog
+        style={{width: props.width ?? '250px'}}
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             {props.header}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {props.message}
+          {message}
         </Modal.Body>
 
         <Modal.Footer>
