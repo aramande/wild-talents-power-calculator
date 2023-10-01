@@ -8,6 +8,9 @@ import { createAction } from '../../helpers/Reducer';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import QualityHelper from '../../helpers/Quality.helper';
 import style from './powerqualityeditor.module.scss';
+import useModal from '../../hooks/useModal';
+import { guid } from '../../helpers/GUID';
+import ModifierPickerModal from '../ModifierPickerModal/modifierpickermodal';
 
 interface PowerQualityEditorProps {
   initialData?: IPowerQuality;
@@ -16,14 +19,10 @@ interface PowerQualityEditorProps {
 
 const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, onChange }: PowerQualityEditorProps) => {
   const [description, setDescription] = useState<string[]>([]);
-  const [multiplier, setMultiplier] = useState(1);
-  const [specific, setSpecific] = useState<string>('');
-  const [cost, setCost] = useState(1);
   const [quality, dispatch] = usePowerQuality(initialData);
-  const [exampleModifier, setExampleModifierState] = useState<IPowerModifier>(Modifiers.extra[0]);
-  const [filter, setFilter] = useState<string>('');
-  const [focusFilter, setFocusFilter] = useState<boolean>(false);
-
+  const [currentModifierPicker, setCurrentModifierPicker] = useState<IPowerModifier|undefined>();
+  const [openModifierPicker, setOpenModifierPicker] = useModal();
+  
   useEffect(() => {
     onChange(quality);
   }, [quality, onChange]);
@@ -39,25 +38,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
     }
     dispatch(createAction(PowerQualityActionKind.SET_NAME, qualityName));
   }
-  function addModifier(formData: FormData) {
-    const name = formData.get('name')?.toString() ?? 'Custom';
-    const ref = name + specific;
-    const found = quality.modifiers.find((x) => x.name === name && x.specific === specific);
-    if (!found) {
-      const modifier: IPowerModifier = {
-        ref: ref,
-        name: name,
-        specific: specific,
-        cost: cost,
-        multiplier: multiplier,
-      };
-      dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, modifier));
-    } else {
-      found.multiplier = found.multiplier + multiplier;
-    }
-    setMultiplier(1);
-    setSpecific('');
-  }
+  
   function setQualityMultiplier(direction: boolean) {
     if (direction) dispatch(createAction(PowerQualityActionKind.INC_MULTIPLIER, undefined));
     else dispatch(createAction(PowerQualityActionKind.DEC_MULTIPLIER, undefined));
@@ -69,18 +50,13 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
     dispatch(createAction(PowerQualityActionKind.DEL_MODIFIER, ref));
   }
   function setExampleModifier(modifier: IPowerItem) {
-    setCost(modifier.cost);
     setDescription(getDescription(modifier.name));
-    setExampleModifierState(modifier);
   }
   function sortModifiers(a: IPowerItem, b: IPowerItem): number {
     const aCost = a.cost > 0 ? a.cost + 10 : -a.cost;
     const bCost = b.cost > 0 ? b.cost + 10 : -b.cost;
     return bCost - aCost;
   }
-  // function setEmulatedPower(state: boolean) {
-  //   dispatch(createAction(PowerQualityActionKind.SET_EMULATED, state));
-  // }
   function setPowerType(state: TType) {
     dispatch(createAction(PowerQualityActionKind.SET_POWER_TYPE, state));
   }
@@ -104,14 +80,52 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
     }
     return disabled ? 'btn--disabled ' : '';
   }
-  function shouldShow(item: IPowerModifier): boolean {
-    if (!focusFilter && item.focus) return false;
-    if (filter.length > 0 && item.name.toLowerCase().indexOf(filter) < 0) return false;
-    return true;
+
+  function openAddModifier(): void {
+    const modifier: IPowerModifier = {
+      ref: guid(),
+      name: '',
+      specific: '',
+      cost: 0,
+      multiplier: 1,
+    };
+    setCurrentModifierPicker(modifier);
+    setOpenModifierPicker(true);
+  }
+  function openEditModifier(modifier: IPowerModifier): void {
+    setCurrentModifierPicker(modifier);
+    setOpenModifierPicker(true);
+  }
+
+  function onModifierPickerClose(){
+    setOpenModifierPicker(false);
+  }
+  function onModifierPickerSave(modifier: IPowerModifier){
+    let found = quality.modifiers.find((x) => x.ref === modifier.ref);
+    if(!found) {
+      found = quality.modifiers.find((x) => (x.name === modifier.name && x.specific === modifier.specific))
+    }
+    if (!found) {
+      const result: IPowerModifier = {
+        ref: modifier.ref,
+        name: modifier.name,
+        specific: modifier.specific,
+        cost: modifier.cost,
+        multiplier: modifier.multiplier,
+      };
+      dispatch(createAction(PowerQualityActionKind.ADD_MODIFIER, result));
+    } else {
+      found.ref = modifier.ref;
+      found.name = modifier.name;
+      found.specific = modifier.specific;
+      found.multiplier = modifier.multiplier;
+      found.cost = modifier.cost;
+    }
+    setOpenModifierPicker(false);
   }
 
   return (
-    <section className={style.editor}>
+    <section className={`${style.editor}`}>
       <div className={style.creation}>
         <div className="btn-group" role="group" aria-label="Power Quality">
           <Button
@@ -204,78 +218,22 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
         </div>
         <div className="spaceabove--1">Capacities: {QualityHelper.getCapacities(quality).join(', ')}</div>
 
-        <form
-          onSubmit={(e) => {
-            addModifier(new FormData(e.currentTarget));
-            e.preventDefault();
-          }}
-        >
-          <table className="form">
-            <tbody>
-              <tr>
-                <td colSpan={2}>
-                  <h3 className="form__header">Extras/Flaws</h3>
-                </td>
-              </tr>
-              <tr>
-                <th className="form__label">Name</th>
-                <td className="form__value">
-                  <input type="text" name="name" value={exampleModifier.name} readOnly={true} />
-                </td>
-              </tr>
-              <tr>
-                <th className="form__label">Note</th>
-                <td className="form__value">
-                  <input type="text" name="specific" value={specific} onChange={(e) => setSpecific(e.target.value)} />
-                </td>
-              </tr>
-              <tr>
-                <th className="form__label">Cost</th>
-                <td className="form__value">
-                  <input type="number" name="cost" value={cost} onChange={(e) => setCost(parseInt(e.target.value))} />
-                </td>
-              </tr>
-              <tr>
-                <th className="form__label">Level</th>
-                <td className="form__value form__row">
-                  <button
-                    type="button"
-                    className="btn btn--transparent btn--small"
-                    onClick={() => setMultiplier((x) => (x > 2 ? x - 1 : 1))}
-                  >
-                    <i className="fa-solid fa-minus"></i>
-                  </button>
-                  {multiplier}
-                  <button
-                    type="button"
-                    className="btn btn--transparent btn--small"
-                    onClick={() => setMultiplier((x) => x + 1)}
-                  >
-                    <i className="fa-solid fa-plus"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <button className="btn btn--accent btn--small spaceabove--1" type="submit">
-                    Add
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-
         <div className="spaceabove--2">
           {quality.modifiers.sort(sortModifiers).map((modifier) => (
-            <div key={modifier.ref} className={style.modifier}>
+            <div key={modifier.ref} className={style.modifier} onClick={() => setExampleModifier(modifier)}>
               <strong>
                 {modifier.multiplier > 1 ? `+${modifier.multiplier} ` : ''}
                 {modifier.name}
               </strong>
               {modifier.specific && <span>({modifier.specific})</span>}
               <small>{`(${modifier.cost * modifier.multiplier})`}</small>
+              <button
+                type="button"
+                className="btn btn--transparent btn--small absolute top--0 right--5"
+                onClick={() => openEditModifier(modifier)}
+              >
+                <i className="fa-solid fa-edit"></i>
+              </button>
               <button
                 type="button"
                 className="btn btn--transparent btn--small absolute top--0 right--0"
@@ -286,69 +244,16 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
             </div>
           ))}
         </div>
+        <button className="btn btn--accent btn--small spaceabove--1" type="button" onClick={() => openAddModifier()}>
+          Add Extra/Flaw
+        </button> 
       </div>
-      <aside className={style.examples}>
-        <div className={style.pair}>
-          <div>
-            <label htmlFor="filter">Filter</label>{' '}
-            <input type="text" id="filter" value={filter} onChange={(e) => setFilter(e.target.value.toLowerCase())} />
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              id="focusFilter"
-              checked={focusFilter}
-              onChange={(e) => setFocusFilter(e.target.checked)}
-            />{' '}
-            <label htmlFor="focusFilter">Show Focus Extras/Flaws</label>
-          </div>
-        </div>
-
-        <div className={`${style.pair} ${style.scrollarea}`}>
-          <div className={`${style.extras} btnlist`}>
-            {Modifiers.extra
-              .filter((x) => shouldShow(x))
-              .map((x) => (
-                <button
-                  key={x.ref}
-                  type="button"
-                  className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'}
-                  onClick={() => setExampleModifier(x)}
-                >
-                  {x.name}
-                  {x.focus ? <sup>F</sup> : ''} ({getDisplayCost(x)})
-                </button>
-              ))}
-          </div>
-          <div className={`${style.flaws} btnlist`}>
-            {Modifiers.flaws
-              .filter((x) => shouldShow(x))
-              .map((x) => (
-                <button
-                  key={x.ref}
-                  type="button"
-                  className={(exampleModifier.name === x.name ? 'active ' : '') + 'btnlist__btn'}
-                  onClick={() => setExampleModifier(x)}
-                >
-                  {x.name}
-                  {x.focus ? <sup>F</sup> : ''} ({getDisplayCost(x)})
-                </button>
-              ))}
-          </div>
-        </div>
-        {focusFilter ? (
-          <small>
-            <sup>F</sup> Only available for Focuses
-          </small>
-        ) : (
-          <small></small>
-        )}
-      </aside>
       <div className={`${style.description}`}>
         {description.map((x, i) => (
           <ReactMarkdown key={i}>{x}</ReactMarkdown>
         ))}
       </div>
+      {currentModifierPicker && (<ModifierPickerModal onClose={() => onModifierPickerClose()} onSave={(modifier: IPowerModifier) => onModifierPickerSave(modifier)} show={openModifierPicker} initialData={currentModifierPicker} />)}
     </section>
   );
 };
