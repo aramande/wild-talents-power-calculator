@@ -106,6 +106,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     setPowerQualities((qualities) => [...qualities, result]);
   }
   function deleteQuality(ref: string): void {
+    setDirty(true);
     setPowerQualities((qualities) => qualities.filter((x) => x.ref !== ref));
   }
 
