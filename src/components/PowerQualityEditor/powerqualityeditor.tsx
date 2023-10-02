@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { IPowerItem, IPowerModifier, IPowerQuality, TCapacity, TType } from '../../interfaces/power.interface';
 import { getDescription } from '../../helpers/get-description';
@@ -11,6 +11,7 @@ import style from './powerqualityeditor.module.scss';
 import useModal from '../../hooks/useModal';
 import { guid } from '../../helpers/GUID';
 import ModifierPickerModal from '../ModifierPickerModal/modifierpickermodal';
+import ConfirmModal from '../../modals/confirm.modal';
 
 interface PowerQualityEditorProps {
   initialData?: IPowerQuality;
@@ -22,7 +23,9 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
   const [quality, dispatch] = usePowerQuality(initialData);
   const [currentModifierPicker, setCurrentModifierPicker] = useState<IPowerModifier|undefined>();
   const [openModifierPicker, setOpenModifierPicker] = useModal();
-  
+  const [removeModalOpen, toggleRemoveModal ] = useModal();
+ 
+  const toRemove = useRef<IPowerModifier|undefined>();
   useEffect(() => {
     onChange(quality);
   }, [quality, onChange]);
@@ -46,8 +49,13 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
   function setQualitySpecific(specific: string) {
     dispatch(createAction(PowerQualityActionKind.SET_SPECIFIC, specific));
   }
+  function askRemoveModifier(modifier: IPowerModifier): void {
+    toRemove.current = modifier;
+    toggleRemoveModal(true);
+  }
   function removeModifier(ref: string): void {
     dispatch(createAction(PowerQualityActionKind.DEL_MODIFIER, ref));
+    toggleRemoveModal(false)
   }
   function setExampleModifier(modifier: IPowerItem) {
     setDescription(getDescription(modifier.name));
@@ -237,7 +245,7 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
               <button
                 type="button"
                 className="btn btn--transparent btn--small absolute top--0 right--0"
-                onClick={() => removeModifier(modifier.ref)}
+                onClick={() => askRemoveModifier(modifier)}
               >
                 <i className="fa-solid fa-trash"></i>
               </button>
@@ -253,6 +261,9 @@ const PowerQualityEditor: React.FC<PowerQualityEditorProps> = ({ initialData, on
           <ReactMarkdown key={i}>{x}</ReactMarkdown>
         ))}
       </div>
+      {toRemove.current && (<ConfirmModal width={'300px'} show={removeModalOpen} header={'Unsaved Changes'} message={[`Are you sure you want to remove '${toRemove.current.name}'?`]} 
+        onCancel={() => toggleRemoveModal(false)} 
+        onConfirm={() => toRemove.current && removeModifier(toRemove.current.ref)} />)}
       {currentModifierPicker && (<ModifierPickerModal onClose={() => onModifierPickerClose()} onSave={(modifier: IPowerModifier) => onModifierPickerSave(modifier)} show={openModifierPicker} initialData={currentModifierPicker} />)}
     </section>
   );
