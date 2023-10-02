@@ -5,17 +5,29 @@
   display: grid;
   gap: space(2);
   max-height: calc(95vh - 120px);
-  width: 50vw;
+  width: 90vw;
   padding: space(3);
   grid-template-columns: 1fr;
   grid-auto-rows: max-content;
   overflow-y: auto;
   overflow-x: hidden;
+  &.editMode{
+    width: 45vw;
+    
+  }
 
   @include screen.larger-than(md) {
     grid-template-columns: 255px 1fr;
+    grid-template-rows: 2fr 1fr;
+    overflow-y: hidden;
+  }
+  @include screen.larger-than(lg) {
+    grid-template-columns: 255px 500px 1fr;
     grid-template-rows: 1fr;
     overflow-y: hidden;
+    &.editMode{
+      grid-template-columns: 255px 1fr;
+    }
   }
 }
 .creation {
@@ -41,7 +53,7 @@
   }
   @include screen.larger-than(lg) {
     grid-row-start: 1;
-    grid-column-start: 2;
+    grid-column-start: 3;
   }
 }
 
@@ -116,5 +128,4 @@
   position: relative;
   padding-right: 25px;
   max-width: 300px;
-  cursor: help;
 }

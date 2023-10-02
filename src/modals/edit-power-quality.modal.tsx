@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { IPowerQuality } from '../interfaces/power.interface';
 import PowerQualityEditor from '../components/PowerQualityEditor/powerqualityeditor';
+import ConfirmModal from './confirm.modal';
+import useModal from '../hooks/useModal';
 
 interface AddPowerQualityModalProps {
   initialData?: IPowerQuality;
@@ -13,14 +15,19 @@ interface AddPowerQualityModalProps {
 
 const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
   const [result, setResult] = useState<IPowerQuality>(undefined as any as IPowerQuality);
+  const [removeModalOpen, toggleRemoveModal ] = useModal();
 
   function onSave() {
     if (result) props.onSave(result);
     props.onClose();
   }
   function onDelete() {
+    toggleRemoveModal(true);
+  }
+  function removeModifier(): void {
     if (result) props.onDelete(result.ref);
     props.onClose();
+    toggleRemoveModal(false);
   }
 
   return (
@@ -44,6 +51,10 @@ const AddPowerQualityModal: React.FC<AddPowerQualityModalProps> = (props) => {
           <Button variant="primary" className="btn--primary" onClick={() => onSave()}>
             Save
           </Button>
+          
+          {result && (<ConfirmModal width={'300px'} show={removeModalOpen} header={'Unsaved Changes'} message={[`Are you sure you want to remove '${result.name} (${result.specific})'?`]} 
+            onCancel={() => toggleRemoveModal(false)} 
+            onConfirm={() => removeModifier()} />)}
         </Modal.Footer>
       </Modal.Dialog>
     </Modal>
