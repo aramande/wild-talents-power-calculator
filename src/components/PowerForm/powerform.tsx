@@ -68,7 +68,7 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     toggleUnsavedChangesModal(false);
     if (!toOverwrite.current) return;
     const prop = toOverwrite.current;
-    const data = props.data;
+    const data = prop.data;
     if (prop.desc) setDesc(prop.desc);
     if (data) {
       setName(data?.name);
@@ -136,6 +136,9 @@ const PowerForm: React.FC<PowerFormProps> = (props: PowerFormProps) => {
     };
     if(dirty) {
       toggleUnsavedChangesModal(true); 
+    }
+    else{
+      overwriteChanges();
     }
   }
   function addTag(tag: Tag) {
